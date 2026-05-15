@@ -308,6 +308,45 @@ model DsgvoAuditLog {
   @@map("dsgvo_audit_log")
 }
 
+// ─── HUMAN POTENTIAL (Berufungs-Brücke — Artikel 1 GG / Art. 23 UN-Menschenrechte) ─────
+// Kein Notenfeld. Keine Zertifikate. Nur Lebenswille und Potenzial.
+// Speichert dynamische Entwicklungspfade im JSONB-Format.
+
+enum BridgeStatus {
+  INCEPTION        // Profil eingegangen, Agenten noch nicht aktiv
+  MAPPING          // Ikigai-Analyse läuft
+  MATCHING         // Agenten suchen Wege im globalen Netzwerk
+  BRIDGE_FOUND     // Konkrete Ressourcen / Mentoren / Wege identifiziert
+  ACTIVE           // Mensch ist auf seinem Weg
+  FULFILLED        // Berufung gelebt
+}
+
+model HumanPotential {
+  id                String       @id @default(cuid())
+
+  // Zero-Knowledge: kein Klartextbezug zur Person
+  anonymousRef      String       @unique  // Zufalls-UUID — kein Bezug zur User-ID
+
+  // Das Kern-Profil: JSONB — keine starren Spalten, keine Noten
+  // Struktur: { meta, aspiration, ikigai, human_potential, bridge_status }
+  profile           Json         // @db.JsonB — dynamisches Potenzial-Profil
+
+  // Berufsfeld-Kategorie (aus dem UI-Picker)
+  fieldKey          String       // handwerk | natur | soziales | kunst | technik | spirituell | wissenschaft | anderes
+
+  // Brücken-Status (Agent-Pipeline)
+  bridgeStatus      BridgeStatus @default(INCEPTION)
+
+  // Anonymisierung nach Art. 17 DSGVO
+  anonymizedAt      DateTime?
+
+  // Zeitstempel
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  @@map("human_potentials")
+}
+
 // ─── RESONANZ-BILANZ (Daily Report) ──────────────────────────────────────────
 
 model ResonanzBilanz {

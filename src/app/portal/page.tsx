@@ -115,6 +115,14 @@ export default async function PilgrimPortalPage() {
             </p>
           </Link>
 
+          <Link href="/portal/berufung" className="station-card text-center" style={{ borderTop: "2px solid #d4af37" }}>
+            <div className="font-ceremonial text-gold mb-2" style={{ fontSize: "1.4rem" }}>◈</div>
+            <div className="font-ceremonial" style={{ fontSize: "0.75rem", letterSpacing: "2px" }}>Berufungs-Brücke</div>
+            <p className="mt-2 opacity-50" style={{ fontFamily: "var(--font-body)", fontSize: "0.85rem" }}>
+              Ikigai-Mapping · Menschenwürde vor Schulnoten
+            </p>
+          </Link>
+
           <Link href="/portal/leitanker" className="station-card text-center">
             <div className="font-ceremonial text-gold mb-2" style={{ fontSize: "1.4rem" }}>⚓</div>
             <div className="font-ceremonial" style={{ fontSize: "0.75rem", letterSpacing: "2px" }}>Leitanker-Portal</div>
