@@ -1,0 +1,329 @@
+// GloryaShine Pilger — Prisma Schema
+// Multi-tenant spiritual pilgrimage platform
+// All Junior comms route ONLY to parents — never directly to children
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── ENUMS ───────────────────────────────────────────────────────────────────
+
+enum Role {
+  SUPER_ADMIN
+  TENANT_ADMIN
+  PILGRIM
+  PARENT
+  JUNIOR
+}
+
+enum PetitionVisibility {
+  PUBLIC
+  TENANT_ONLY
+  PRIVATE
+}
+
+enum PetitionStatus {
+  HOFFNUNG
+  HEILUNG
+  GEWISSHEIT
+}
+
+enum NewsCategory {
+  GOVERNANCE    // Blue/Cyan — UN/EU official
+  GIESSFAST     // Gold — successful transformations
+  COMMUNITY     // Green — docking & connections
+  PASSAGE       // Sacred calendar events
+  GUARDIAN      // Parent-passage status updates
+}
+
+enum VacancyStatus {
+  WAITING
+  MATCHED
+  GOLDEN
+}
+
+enum JuniorTransitionStatus {
+  ACTIVE_JUNIOR
+  PENDING_TRANSITION
+  TRANSITIONED
+}
+
+// ─── TENANT ──────────────────────────────────────────────────────────────────
+
+model Tenant {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String?
+  countryCode String   @default("DE")  // ISO-2
+  nodeId      String?  // e.g. ID-EU, ID-US, ID-CH
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users       User[]
+  petitions   Petition[]
+  newsItems   NewsItem[]
+
+  @@map("tenants")
+}
+
+// ─── USER ─────────────────────────────────────────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  email         String?   @unique  // NULL for JUNIOR — no direct email channel
+  emailVerified DateTime?
+  name          String?
+  passwordHash  String?
+  role          Role      @default(PILGRIM)
+  sovereignId   String?   @unique  // ID-GLB-DE-xxx or ID-JNR-GLOB-xxx
+  isActive      Boolean   @default(true)
+  isMentorReady Boolean   @default(false)
+  isVerifiedMentor Boolean @default(false)  // COPPA/GDPR vetted mentor badge
+  dateOfBirth   DateTime?
+  countryCode   String    @default("DE")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // ── DSGVO / EU Data Sovereignty ──────────────────────────────────────
+  // Art. 7 DSGVO: explicit, documented consent
+  consentGivenAt    DateTime?  // timestamp when user accepted data terms
+  consentVersion    String?    // version of privacy policy accepted
+  // Art. 17 DSGVO: Right to Erasure — soft-delete with anonymization
+  deletedAt         DateTime?  // soft-delete marker
+  anonymizedAt      DateTime?  // set when PII is irreversibly anonymised
+  // Art. 5(1)(c) DSGVO: Data minimisation — no unnecessary fields stored
+  dataMinimized     Boolean    @default(false) // flag after minimisation run
+  // Art. 20 DSGVO: Data portability export requested
+  portabilityRequestedAt DateTime?
+
+  tenantId      String?
+  tenant        Tenant?   @relation(fields: [tenantId], references: [id])
+
+  // Auth sessions
+  sessions      Session[]
+  accounts      Account[]
+
+  // Pilgrim relations
+  petitions     Petition[]
+  newsItems     NewsItem[]  @relation("NewsAuthor")
+  receivedNews  NewsItem[]  @relation("NewsRecipient")
+
+  // Parent relations
+  childLinks    ParentChildLink[] @relation("ParentUser")
+
+  // Junior relations
+  parentLink    ParentChildLink?  @relation("ChildUser")
+  juniorProfile JuniorProfile?
+
+  // Family workspace
+  familyMemberships FamilyWorkspaceMember[]
+
+  @@map("users")
+}
+
+// ─── AUTH (NextAuth v5 compatible) ───────────────────────────────────────────
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ─── PARENT ↔ CHILD LINK (Two-Key Cryptographic Bond) ────────────────────────
+
+model ParentChildLink {
+  id              String   @id @default(cuid())
+  parentId        String
+  childId         String   @unique  // one parent link per child
+  encryptedKey    String   @db.Text // cryptographic guardian link key
+  isActive        Boolean  @default(true)
+  inviteToken     String?  @unique  // one-click-invite token
+  inviteExpiresAt DateTime?
+  activatedAt     DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  parent          User     @relation("ParentUser", fields: [parentId], references: [id])
+  child           User     @relation("ChildUser", fields: [childId], references: [id])
+
+  @@map("parent_child_links")
+}
+
+// ─── JUNIOR PROFILE ──────────────────────────────────────────────────────────
+
+model JuniorProfile {
+  id                  String                 @id @default(cuid())
+  userId              String                 @unique
+  // NO email field — Silent Junior ID, zero external comms
+  displayName         String
+  dateOfBirth         DateTime
+  transitionStatus    JuniorTransitionStatus @default(ACTIVE_JUNIOR)
+  transitionConfirmed Boolean                @default(false)
+  createdAt           DateTime               @default(now())
+  updatedAt           DateTime               @updatedAt
+
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("junior_profiles")
+}
+
+// ─── PETITION (FÜRBITTE) ──────────────────────────────────────────────────────
+
+model Petition {
+  id          String             @id @default(cuid())
+  title       String
+  content     String             @db.Text
+  visibility  PetitionVisibility @default(PRIVATE)
+  status      PetitionStatus     @default(HOFFNUNG)
+  isDeleted   Boolean            @default(false)
+  // DSGVO Art. 17: anonymise on erasure — identity detached, intention preserved
+  anonymizedAt DateTime?          // PII stripped; structural wish-data remains
+  purposeCode  String?            // Zweckbindung: EARTH | FELLOWS | GOVERNMENT | SELF
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  authorId    String
+  author      User               @relation(fields: [authorId], references: [id])
+  tenantId    String?
+  tenant      Tenant?            @relation(fields: [tenantId], references: [id])
+
+  @@map("petitions")
+}
+
+// ─── NEWS ITEM (Resonance Feed) ───────────────────────────────────────────────
+
+model NewsItem {
+  id          String       @id @default(cuid())
+  title       String
+  content     String       @db.Text
+  category    NewsCategory @default(COMMUNITY)
+  isGolden    Boolean      @default(false)   // priority golden notification
+  isVerified  Boolean      @default(false)   // verified by alliance
+  publishedAt DateTime     @default(now())
+  createdAt   DateTime     @default(now())
+
+  authorId    String?
+  author      User?        @relation("NewsAuthor", fields: [authorId], references: [id])
+
+  // Targeted delivery — NULL = broadcast to all adult members
+  recipientId String?
+  recipient   User?        @relation("NewsRecipient", fields: [recipientId], references: [id])
+
+  tenantId    String?
+  tenant      Tenant?      @relation(fields: [tenantId], references: [id])
+
+  @@map("news_items")
+}
+
+// ─── VACANCY (Andock system) ──────────────────────────────────────────────────
+
+model Vacancy {
+  id          String        @id @default(cuid())
+  arriverId   String        // the newcomer seeking a "Hallo"
+  mentorId    String?       // the member who filled it
+  isJunior    Boolean       @default(false)
+  countryCode String        @default("DE")
+  status      VacancyStatus @default(WAITING)
+  matchedAt   DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@map("vacancies")
+}
+
+// ─── FAMILY WORKSPACE ─────────────────────────────────────────────────────────
+
+model FamilyWorkspace {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+
+  members     FamilyWorkspaceMember[]
+
+  @@map("family_workspaces")
+}
+
+model FamilyWorkspaceMember {
+  id          String          @id @default(cuid())
+  workspaceId String
+  userId      String
+  joinedAt    DateTime        @default(now())
+
+  workspace   FamilyWorkspace @relation(fields: [workspaceId], references: [id])
+  user        User            @relation(fields: [userId], references: [id])
+
+  @@unique([workspaceId, userId])
+  @@map("family_workspace_members")
+}
+
+// ─── DSGVO AUDIT LOG (Revisionssicher — nur Struktur, keine Seeleninhalte) ───
+
+model DsgvoAuditLog {
+  id          String   @id @default(cuid())
+  userId      String?  // NULL = system action
+  action      String   // CONSENT_GIVEN | DATA_EXPORTED | DATA_DELETED | ANONYMIZED | PURPOSE_CHANGED
+  detail      String?  // non-PII context description
+  ipHash      String?  // hashed IP — never plain IP stored
+  performedAt DateTime @default(now())
+
+  @@map("dsgvo_audit_log")
+}
+
+// ─── RESONANZ-BILANZ (Daily Report) ──────────────────────────────────────────
+
+model ResonanzBilanz {
+  id                    String   @id @default(cuid())
+  reportDate            DateTime @unique
+  giessFactInput        Float    @default(0)   // TB of "Altes" processed
+  transmutationRate     Float    @default(0)   // percentage
+  goldProjects          Int      @default(0)
+  vacanciesFilled       Int      @default(0)
+  newArrivals           Int      @default(0)
+  juniorSynced          Int      @default(0)
+  parentRelaySuccess    Int      @default(0)
+  transitions18         Int      @default(0)   // aged-out juniors → sovereign
+  attacksBlocked        Int      @default(0)
+  resonanceFrequency    Float    @default(432)
+  generatedAt           DateTime @default(now())
+
+  @@map("resonanz_bilanz")
+}

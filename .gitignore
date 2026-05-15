@@ -1,0 +1,99 @@
+# ================================================================
+# .gitignore — GloryaShine Pilger
+# SECURITY: This file protects all secrets and local config.
+# Only the owner may inspect environment values locally.
+# ================================================================
+
+# --- Dependencies ---
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# --- Next.js build output ---
+/.next/
+/out/
+/build
+
+# --- ALL environment / secret files ---
+# None of these must ever reach the repo
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+.env.staging
+.env.test
+.env.preview
+# .env.local.example is intentionally committed (no real values)
+
+# --- Cryptographic keys & certificates ---
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.der
+*.gpg
+*.asc
+id_rsa
+id_ed25519
+*.pub
+*.jks
+*.keystore
+
+# --- Database & seed secrets ---
+*.db
+*.sqlite
+*.sqlite3
+prisma/.env
+seed-output.txt
+
+# --- Logs ---
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+*.log
+logs/
+
+# --- OS artifacts ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+desktop.ini
+
+# --- Editor & IDE ---
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+.windsurf/
+
+# --- TypeScript ---
+*.tsbuildinfo
+next-env.d.ts
+
+# --- Netlify ---
+.netlify/
+
+# --- Vercel ---
+.vercel
+
+# --- Test coverage ---
+/coverage
+
+# --- Backup / temp files ---
+*.bak
+*.tmp
+*.orig
+*.backup

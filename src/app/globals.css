@@ -1,0 +1,348 @@
+/* ─── GOOGLE FONTS ─────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,400&family=Playfair+Display:ital,wght@0,400;1,700&display=swap');
+@import "tailwindcss";
+
+/* ─── DESIGN TOKENS ────────────────────────────────────────────────────────── */
+:root {
+  --midnight:        oklch(0.18 0.04 265);
+  --midnight-deep:   oklch(0.13 0.04 265);
+  --midnight-black:  #0a0c10;
+  --gold:            oklch(0.82 0.13 85);
+  --gold-bright:     oklch(0.90 0.15 90);
+  --gold-alchemic:   #d4af37;
+  --gold-ethereal:   #f9f1d7;
+  --lion-amber:      #e67e22;
+  --glory-shine:     oklch(0.95 0.05 95);
+  --glass:           rgba(255, 255, 255, 0.03);
+  --glass-hover:     rgba(255, 255, 255, 0.06);
+  --border-gold:     rgba(212, 175, 55, 0.35);
+  --border-gold-bright: rgba(212, 175, 55, 0.7);
+  --cyan-un:         #00bcd4;
+  --green-community: #4caf7d;
+  --violet-old:      #7c3aed;
+
+  /* Font families */
+  --font-ceremonial: var(--font-cinzel), 'Cinzel', serif;
+  --font-body:       var(--font-cormorant), 'Cormorant Garamond', serif;
+  --font-quote:      var(--font-playfair), 'Playfair Display', serif;
+}
+
+/* ─── TAILWIND THEME EXTENSION ─────────────────────────────────────────────── */
+@theme {
+  --color-midnight-deep:  var(--midnight-black);
+  --color-midnight:       #1a1d2e;
+  --color-gold:           var(--gold-alchemic);
+  --color-gold-bright:    #f0d060;
+  --color-gold-ethereal:  var(--gold-ethereal);
+  --color-glory-shine:    #f9f1d7;
+  --color-lion-amber:     var(--lion-amber);
+  --color-glass:          rgba(255,255,255,0.03);
+  --color-border-gold:    rgba(212,175,55,0.35);
+  --color-cyan-un:        #00bcd4;
+  --color-green-community: #4caf7d;
+  --color-violet-old:     #7c3aed;
+
+  --font-family-ceremonial: var(--font-cinzel), Cinzel, serif;
+  --font-family-body:       var(--font-cormorant), 'Cormorant Garamond', serif;
+  --font-family-quote:      var(--font-playfair), 'Playfair Display', serif;
+}
+
+/* ─── BASE STYLES ───────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--midnight-black);
+  color: var(--gold-ethereal);
+  font-family: var(--font-body);
+  line-height: 1.75;
+  overflow-x: hidden;
+}
+
+/* ─── TYPOGRAPHY ────────────────────────────────────────────────────────────── */
+.font-ceremonial {
+  font-family: var(--font-ceremonial);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+.font-quote {
+  font-family: var(--font-quote);
+  font-style: italic;
+}
+
+/* ─── BACKGROUND OVERLAYS ────────────────────────────────────────────────────── */
+.bg-sacred {
+  background:
+    radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(212, 175, 55, 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.03) 0%, transparent 70%),
+    var(--midnight-black);
+}
+
+.bg-glass {
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-gold);
+}
+
+.bg-glass-hover:hover {
+  background: var(--glass-hover);
+  border-color: var(--gold-alchemic);
+}
+
+/* ─── GOLD GLOW ──────────────────────────────────────────────────────────────── */
+.glow-gold {
+  text-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+}
+
+.glow-gold-box {
+  box-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
+}
+
+/* ─── ANIMATIONS ─────────────────────────────────────────────────────────────── */
+@keyframes glory-pulse {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.015); }
+}
+
+@keyframes gold-float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-6px); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+@keyframes orbit-pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(212,175,55,0.4); }
+  50%       { box-shadow: 0 0 20px rgba(212,175,55,0.8); }
+}
+
+@keyframes particle-rise {
+  0%   { transform: translateY(0) scale(1); opacity: 0.8; }
+  100% { transform: translateY(-60px) scale(0); opacity: 0; }
+}
+
+@keyframes dock-flash {
+  0%, 100% { opacity: 0; }
+  50%       { opacity: 1; }
+}
+
+.animate-glory-pulse { animation: glory-pulse 4s ease-in-out infinite; }
+.animate-gold-float  { animation: gold-float 6s ease-in-out infinite; }
+.animate-orbit-pulse { animation: orbit-pulse 3s ease-in-out infinite; }
+
+/* ─── PASSAGE LINE (horizontal gold rule) ─────────────────────────────────── */
+.passage-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-alchemic), transparent);
+  width: 100%;
+}
+
+/* ─── STATION CARD ────────────────────────────────────────────────────────── */
+.station-card {
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-gold);
+  padding: 2rem;
+  text-align: center;
+  position: relative;
+  transition: transform 0.4s ease, border-color 0.3s ease;
+}
+.station-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--gold-alchemic);
+}
+
+/* ─── METRIC CARD (Admin Dashboard) ─────────────────────────────────────────── */
+.metric-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border-gold);
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold-alchemic), transparent);
+}
+
+/* ─── BUTTONS ────────────────────────────────────────────────────────────────── */
+.btn-gold {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--gold-alchemic);
+  color: var(--midnight-black);
+  font-family: var(--font-ceremonial);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 0.75rem 1.75rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn-gold:hover {
+  background: var(--gold-bright, #f0d060);
+  box-shadow: 0 0 20px rgba(212,175,55,0.4);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  color: var(--gold-alchemic);
+  font-family: var(--font-ceremonial);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 0.75rem 1.75rem;
+  border: 1px solid var(--border-gold);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn-ghost:hover {
+  border-color: var(--gold-alchemic);
+  background: rgba(212,175,55,0.06);
+}
+
+/* ─── FORM INPUTS ────────────────────────────────────────────────────────────── */
+.input-sacred {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border-gold);
+  color: var(--gold-ethereal);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+.input-sacred::placeholder { opacity: 0.4; }
+.input-sacred:focus { border-color: var(--gold-alchemic); }
+
+/* ─── BADGES ─────────────────────────────────────────────────────────────────── */
+.badge-governance { background: rgba(0,188,212,0.1); color: var(--cyan-un); border: 1px solid rgba(0,188,212,0.3); }
+.badge-giessfast  { background: rgba(212,175,55,0.1); color: var(--gold-alchemic); border: 1px solid var(--border-gold); }
+.badge-community  { background: rgba(76,175,125,0.1); color: var(--green-community); border: 1px solid rgba(76,175,125,0.3); }
+.badge-guardian   { background: rgba(230,126,34,0.1); color: var(--lion-amber); border: 1px solid rgba(230,126,34,0.3); }
+.badge-passage    { background: rgba(212,175,55,0.15); color: var(--gold-bright, #f0d060); border: 1px solid rgba(212,175,55,0.5); }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: var(--font-ceremonial);
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  padding: 0.25rem 0.6rem;
+  border-radius: 1px;
+}
+
+/* ─── SCROLLBAR ─────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--midnight-black); }
+::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.3); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold-alchemic); }
+
+/* ─── JUNIOR MESH (playful) ─────────────────────────────────────────────────── */
+.junior-bg {
+  background:
+    radial-gradient(circle at 30% 40%, rgba(100,180,255,0.08) 0%, transparent 50%),
+    radial-gradient(circle at 70% 60%, rgba(180,100,255,0.08) 0%, transparent 50%),
+    var(--midnight-black);
+}
+
+/* ─── SELECTION ─────────────────────────────────────────────────────────────── */
+::selection {
+  background: rgba(212, 175, 55, 0.25);
+  color: var(--gold-ethereal);
+}
+
+/* ─── MOBILE NAV HELPERS ────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .hidden-mobile { display: none !important; }
+}
+@media (min-width: 769px) {
+  .show-mobile { display: none !important; }
+}
+
+/* ─── HERO OVERLAY (vignette + depth) ───────────────────────────────────────── */
+.hero-overlay {
+  background:
+    radial-gradient(ellipse at 50% -10%, rgba(212,175,55,0.12) 0%, transparent 55%),
+    radial-gradient(ellipse at 20%  80%, rgba(0,188,212,0.06)  0%, transparent 50%),
+    radial-gradient(ellipse at 80%  90%, rgba(230,126,34,0.05) 0%, transparent 50%);
+}
+
+/* ─── SHIMMER TEXT ───────────────────────────────────────────────────────────── */
+.text-shimmer {
+  background: linear-gradient(
+    105deg,
+    var(--gold-alchemic) 0%,
+    var(--gold-bright, #f0d060) 40%,
+    var(--gold-alchemic) 55%,
+    var(--gold-ethereal) 70%,
+    var(--gold-alchemic) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+
+/* ─── GOLD BORDER GLOW ───────────────────────────────────────────────────────── */
+@keyframes border-pulse {
+  0%, 100% { border-color: rgba(212,175,55,0.3); }
+  50%       { border-color: rgba(212,175,55,0.65); }
+}
+.border-pulse { animation: border-pulse 3s ease-in-out infinite; }
+
+/* ─── FLOATING ORBS ──────────────────────────────────────────────────────────── */
+@keyframes orb-float {
+  0%   { transform: translate(0,   0) scale(1);    opacity: 0.6; }
+  33%  { transform: translate(15px,-20px) scale(1.04); opacity: 0.8; }
+  66%  { transform: translate(-8px, 10px) scale(0.97); opacity: 0.65; }
+  100% { transform: translate(0,   0) scale(1);    opacity: 0.6; }
+}
+.orb { animation: orb-float 12s ease-in-out infinite; }
+.orb-2 { animation: orb-float 16s ease-in-out infinite reverse; animation-delay: -5s; }
+
+/* ─── SCAN LINE (subtle CRT texture for depth) ───────────────────────────────── */
+.scanlines::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.04) 2px,
+    rgba(0,0,0,0.04) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ─── PAGE TRANSITION (fade in on route change) ──────────────────────────────── */
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.page-enter { animation: page-enter 0.5s ease forwards; }
+
