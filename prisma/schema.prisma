@@ -347,6 +347,34 @@ model HumanPotential {
   @@map("human_potentials")
 }
 
+// ─── BRIDGE MESSAGE (Admin ↔ Berufungswunsch-Träger — anonym) ────────────────
+// Kein Klarnamen. Kommunikation über anonyme Referenz.
+// Admin schreibt an die Referenz-ID — der Mensch antwortet über sein Portal.
+
+enum BridgeMessageSender {
+  ADMIN    // Welt-Zentrale / Allianz-Koordinator
+  HUMAN    // Berufungswunsch-Träger (anonym)
+}
+
+model BridgeMessage {
+  id            String              @id @default(cuid())
+
+  // Verknüpfung zum Berufungswunsch — keine User-ID, nur anonyme Referenz
+  anonymousRef  String              // foreign key → HumanPotential.anonymousRef
+
+  sender        BridgeMessageSender
+  content       String              @db.Text
+
+  // Gelesen-Status für Admin-Übersicht
+  isReadByAdmin Boolean             @default(false)
+  isReadByHuman Boolean             @default(false)
+
+  createdAt     DateTime            @default(now())
+
+  @@index([anonymousRef])
+  @@map("bridge_messages")
+}
+
 // ─── RESONANZ-BILANZ (Daily Report) ──────────────────────────────────────────
 
 model ResonanzBilanz {

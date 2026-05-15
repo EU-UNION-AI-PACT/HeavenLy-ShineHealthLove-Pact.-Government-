@@ -117,6 +117,14 @@ export default async function SuperAdminPage() {
               Stigma-Shield — Behörden-Intentions-Matrix
             </p>
           </Link>
+
+          <Link href="/admin/bridge" className="station-card text-center" style={{ borderTop: "2px solid #d4af37" }}>
+            <div className="font-ceremonial text-gold mb-2" style={{ fontSize: "1.2rem" }}>◈</div>
+            <div className="font-ceremonial" style={{ fontSize: "0.75rem", letterSpacing: "2px" }}>Berufungs-Brücke</div>
+            <p className="mt-2 opacity-50" style={{ fontFamily: "var(--font-body)", fontSize: "0.85rem" }}>
+              Ikigai-Monitor · Anonymer Chat · Bridge-Status
+            </p>
+          </Link>
         </div>
 
         {/* FOOTER */}
