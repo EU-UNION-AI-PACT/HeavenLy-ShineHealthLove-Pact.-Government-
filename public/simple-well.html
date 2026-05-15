@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Wunschbrunnen</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  width:100vw;height:100vh;overflow:hidden;
+  background:linear-gradient(180deg,#0a0c10 0%,#1a1c28 50%,#0a0c10 100%);
+  font-family:system-ui,sans-serif;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.stars{
+  position:absolute;inset:0;background-image:
+    radial-gradient(2px 2px at 20% 30%, white, transparent),
+    radial-gradient(2px 2px at 60% 70%, white, transparent),
+    radial-gradient(1px 1px at 50% 50%, white, transparent),
+    radial-gradient(1px 1px at 80% 10%, white, transparent),
+    radial-gradient(2px 2px at 90% 60%, white, transparent),
+    radial-gradient(1px 1px at 33% 80%, white, transparent);
+  background-size:200px 200px;
+  background-position:0 0,40px 60px,130px 270px,70px 100px,150px 50px,90px 180px;
+  opacity:0.6;
+  animation:twinkle 8s linear infinite;
+}
+@keyframes twinkle{
+  0%,100%{opacity:0.6;}
+  50%{opacity:0.9;}
+}
+.well-container{
+  position:relative;width:400px;height:500px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:10;
+}
+.well{
+  width:280px;height:280px;
+  background:radial-gradient(circle at 50% 50%,#1a3a2a 0%,#0d1a0d 70%);
+  border-radius:50%;
+  border:8px solid #2a4a3a;
+  box-shadow:
+    inset 0 -20px 40px rgba(0,0,0,0.8),
+    inset 0 20px 40px rgba(0,255,200,0.1),
+    0 0 60px rgba(0,229,255,0.3);
+  position:relative;
+  overflow:hidden;
+}
+.water{
+  position:absolute;inset:20px;
+  background:radial-gradient(circle at 50% 40%,rgba(0,255,238,0.6),rgba(0,200,180,0.3));
+  border-radius:50%;
+  animation:ripple 3s ease-in-out infinite;
+}
+@keyframes ripple{
+  0%,100%{transform:scale(1);opacity:0.6;}
+  50%{transform:scale(1.05);opacity:0.8;}
+}
+.glow{
+  position:absolute;top:50%;left:50%;
+  width:200%;height:200%;
+  background:radial-gradient(circle,rgba(0,229,255,0.2) 0%,transparent 60%);
+  transform:translate(-50%,-50%);
+  animation:pulse 4s ease-in-out infinite;
+}
+@keyframes pulse{
+  0%,100%{transform:translate(-50%,-50%) scale(1);}
+  50%{transform:translate(-50%,-50%) scale(1.1);}
+}
+.coin{
+  position:absolute;top:50%;left:50%;
+  width:40px;height:40px;
+  background:linear-gradient(135deg,#d4af37,#f0d060,#d4af37);
+  border-radius:50%;
+  transform:translate(-50%,-50%);
+  box-shadow:0 0 20px rgba(212,175,55,0.8);
+  animation:float 3s ease-in-out infinite;
+  cursor:pointer;
+  transition:transform 0.3s;
+}
+.coin:hover{transform:translate(-50%,-50%) scale(1.2);}
+.coin.throwing{
+  animation:throw 2s cubic-bezier(0.25,0.46,0.45,0.94) forwards;
+}
+@keyframes float{
+  0%,100%{transform:translate(-50%,-50%) translateY(0);}
+  50%{transform:translate(-50%,-50%) translateY(-10px);}
+}
+@keyframes throw{
+  0%{transform:translate(-50%,-50%) scale(1) rotateY(0deg);}
+  30%{transform:translate(-50%,-200%) scale(0.8) rotateY(180deg);}
+  60%{transform:translate(-50%,-50%) scale(0.6) rotateY(360deg);}
+  100%{transform:translate(-50%,200%) scale(0.2) rotateY(720deg);opacity:0;}
+}
+.ui{
+  position:absolute;top:20px;left:50%;transform:translateX(-50%);
+  text-align:center;color:#d4af37;
+  font-size:1.2rem;letter-spacing:2px;text-transform:uppercase;
+  text-shadow:0 0 10px rgba(212,175,55,0.6);
+}
+.instruction{
+  position:absolute;bottom:40px;left:50%;transform:translateX(-50%);
+  color:rgba(249,241,215,0.7);font-size:0.9rem;
+  text-align:center;font-style:italic;
+}
+.message{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%) scale(0);
+  background:rgba(10,12,16,0.95);
+  border:2px solid #d4af37;
+  padding:2rem 3rem;border-radius:12px;
+  color:#f9f1d7;text-align:center;
+  box-shadow:0 0 40px rgba(212,175,55,0.4);
+  opacity:0;
+  transition:all 0.5s cubic-bezier(0.68,-0.55,0.27,1.55);
+  z-index:100;
+}
+.message.show{
+  transform:translate(-50%,-50%) scale(1);
+  opacity:1;
+}
+.message h3{
+  font-size:1.5rem;margin-bottom:1rem;color:#d4af37;
+  letter-spacing:2px;
+}
+.message p{
+  font-size:1rem;line-height:1.6;margin-bottom:1.5rem;
+}
+.message button{
+  background:#d4af37;color:#0a0c10;
+  border:none;padding:0.8rem 2rem;
+  font-size:0.9rem;letter-spacing:1.5px;
+  text-transform:uppercase;cursor:pointer;
+  border-radius:4px;
+  transition:all 0.3s;
+}
+.message button:hover{
+  background:#f0d060;
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(212,175,55,0.4);
+}
+</style>
+</head>
+<body>
+<div class="stars"></div>
+<div class="well-container">
+  <div class="ui" id="title">✦ Wunschbrunnen ✦</div>
+  <div class="well">
+    <div class="glow"></div>
+    <div class="water"></div>
+    <div class="coin" id="coin"></div>
+  </div>
+  <div class="instruction">Klicke auf die Münze um deinen Wunsch zu senden</div>
+</div>
+
+<div class="message" id="message">
+  <h3>🍀 Wunsch verwahrt</h3>
+  <p>Dein Wunsch wurde in den heiligen Brunnen geworfen.<br>Möge er in Erfüllung gehen.</p>
+  <button onclick="reset()">Neuen Wunsch senden ✦</button>
+</div>
+
+<script>
+const coin = document.getElementById('coin');
+const message = document.getElementById('message');
+let thrown = false;
+
+coin.addEventListener('click', () => {
+  if(thrown) return;
+  thrown = true;
+  coin.classList.add('throwing');
+  setTimeout(() => {
+    message.classList.add('show');
+  }, 1200);
+});
+
+function reset(){
+  message.classList.remove('show');
+  coin.classList.remove('throwing');
+  setTimeout(() => {
+    thrown = false;
+  }, 500);
+}
+</script>
+</body>
+</html>

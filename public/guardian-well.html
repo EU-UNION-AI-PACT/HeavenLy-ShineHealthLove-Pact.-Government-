@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHINE - Guardian Pipeline</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;900&display=swap" rel="stylesheet">
+    <style>
+        body { margin: 0; overflow: hidden; font-family: 'Inter', sans-serif; background: #000005; }
+        canvas { display: block; }
+        .ui-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; display: flex; flex-direction: column;
+            justify-content: space-between; padding: 2rem; z-index: 100;
+        }
+        .interactive { pointer-events: auto; }
+        .glass-card {
+            background: rgba(0, 10, 30, 0.7); backdrop-filter: blur(25px);
+            border: 1px solid rgba(0, 229, 255, 0.3); border-radius: 24px;
+            padding: 1.5rem; box-shadow: 0 0 50px rgba(0, 229, 255, 0.1);
+        }
+        #message-box {
+            opacity: 0; transform: scale(0.8) translateY(30px); 
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            visibility: hidden;
+        }
+        #message-box.active { opacity: 1; transform: scale(1) translateY(0); visibility: visible; }
+        .glow-title {
+            background: linear-gradient(90deg, #fff, #00ff88, #bd00ff);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+<div class="ui-overlay">
+    <div class="flex justify-between items-start">
+        <div class="glass-card border-l-4 border-cyan-500">
+            <h1 class="text-3xl font-black glow-title tracking-tighter italic">SHINE GUARDIAN</h1>
+            <p class="text-[10px] uppercase tracking-[0.5em] text-cyan-400 font-bold">V-04 Integration Layer</p>
+        </div>
+        <div class="glass-card text-right hidden md:block border-r-4 border-purple-500">
+            <p class="text-[10px] text-purple-400 font-bold uppercase tracking-widest italic">Guardian Status</p>
+            <p class="text-white font-light" id="guardian-status">Sprechbereit</p>
+        </div>
+    </div>
+
+    <div id="message-box" class="self-center glass-card max-w-lg text-center border-purple-500/50">
+        <div class="text-5xl mb-4">🧙‍♂️</div>
+        <h2 class="text-2xl font-bold text-white mb-3 uppercase tracking-widest">Wunsch vom Kobold bewahrt</h2>
+        <p class="text-cyan-100/90 text-md italic leading-relaxed mb-8 px-4" id="final-text">
+            „Der Hüter des Brunnens hat Ihren Impuls entgegengenommen. Mit einem Schmunzeln hat er ihn tief im Kern verwahrt."
+        </p>
+        <button onclick="resetRitual()" class="interactive px-10 py-4 rounded-xl bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-700 hover:scale-105 text-white font-bold uppercase text-xs tracking-[0.2em] transition-all shadow-lg shadow-cyan-900/40">
+            Neuen Wunsch senden
+        </button>
+    </div>
+
+    <div class="flex justify-center">
+        <div id="instruction" class="glass-card text-center interactive px-12 py-4 border-b-4 border-cyan-500">
+            <p class="text-[10px] text-cyan-300 font-bold uppercase tracking-widest mb-1 italic">Release Sequence</p>
+            <p class="text-lg text-white font-light">Wische hoch oder drücke <span class="bg-cyan-500/30 px-3 py-1 rounded text-cyan-200 font-bold">SPACE</span></p>
+        </div>
+    </div>
+</div>
+
+<script>
+let scene, camera, renderer, clock;
+let coin, wellGroup, guardian, starFields = [], planets = [];
+let leftArm, rightArm, headGroup;
+let state = "READY"; 
+let camPos = new THREE.Vector3(0, 60, 120);
+let camTarget = new THREE.Vector3(0, 30, 0);
+
+const config = {
+    gravity: -0.012,
+    flipForceY: 0.75,
+    flipForceZ: -0.45,
+    pipeSpeed: 0.8,
+    wellY: 30,
+    potY: -70,
+    pipeRadius: 5
+};
+
+let coinPhys = { pos: new THREE.Vector3(0, 38, 60), vel: new THREE.Vector3(0, 0, 0) };
+
+function init() {
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x000510);
+    scene.fog = new THREE.FogExp2(0x000510, 0.0015);
+
+    camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 3000);
+    
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.2;
+    document.body.appendChild(renderer.domElement);
+
+    clock = new THREE.Clock();
+
+    // Ambient + mehrere farbige Lichter
+    const ambient = new THREE.AmbientLight(0x2040ff, 0.8);
+    scene.add(ambient);
+    
+    const moonLight = new THREE.DirectionalLight(0xaaccff, 1.5);
+    moonLight.position.set(150, 250, 100);
+    moonLight.castShadow = true;
+    moonLight.shadow.mapSize.width = 2048;
+    moonLight.shadow.mapSize.height = 2048;
+    scene.add(moonLight);
+    
+    // Cyan Glow vom Brunnen
+    const wellGlow = new THREE.PointLight(0x00e5ff, 3, 100);
+    wellGlow.position.set(0, config.wellY + 10, 0);
+    scene.add(wellGlow);
+    
+    // Purple Magic Light
+    const magicLight = new THREE.PointLight(0xbd00ff, 2, 80);
+    magicLight.position.set(-20, config.wellY + 5, 15);
+    scene.add(magicLight);
+    
+    // Gold Accent Light
+    const goldLight = new THREE.PointLight(0xffd700, 1.5, 60);
+    goldLight.position.set(20, config.wellY + 8, -10);
+    scene.add(goldLight);
+
+    createCosmos();
+    createWellStructure();
+    createGuardian();
+    createCoin();
+    
+    animate();
+}
+
+function createCosmos() {
+    for (let i = 0; i < 3; i++) {
+        const geo = new THREE.BufferGeometry();
+        const pos = new Float32Array(3000 * 3);
+        for (let j = 0; j < 3000 * 3; j++) pos[j] = (Math.random() - 0.5) * 2500;
+        geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+        const material = new THREE.PointsMaterial({ size: Math.random() * 2, color: 0x00e5ff, transparent: true, opacity: 0.5 });
+        const field = new THREE.Points(geo, material);
+        field.userData.speed = 0.0001 + Math.random() * 0.0003;
+        starFields.push(field);
+        scene.add(field);
+    }
+}
+
+function createWellStructure() {
+    wellGroup = new THREE.Group();
+    
+    // Hauptkörper mit Stein-Textur
+    const wellGeo = new THREE.CylinderGeometry(15, 18, 15, 32);
+    const wellMat = new THREE.MeshStandardMaterial({ 
+        color: 0x1a2a3a, 
+        metalness: 0.3, 
+        roughness: 0.8,
+        envMapIntensity: 0.5
+    });
+    const wellBody = new THREE.Mesh(wellGeo, wellMat);
+    wellBody.castShadow = true;
+    wellBody.receiveShadow = true;
+    wellGroup.add(wellBody);
+
+    // Steinbänder für Detail
+    for(let i = 0; i < 8; i++) {
+        const band = new THREE.Mesh(
+            new THREE.TorusGeometry(16 - i * 0.2, 0.3, 8, 32),
+            new THREE.MeshStandardMaterial({ 
+                color: i % 2 === 0 ? 0x0d1a2a : 0x1a2a3a,
+                roughness: 0.9 
+            })
+        );
+        band.rotation.x = Math.PI/2;
+        band.position.y = -6 + i * 2;
+        wellGroup.add(band);
+    }
+
+    // Leuchtender Rim mit Glow
+    const rim = new THREE.Mesh(
+        new THREE.TorusGeometry(15.5, 1.2, 20, 100), 
+        new THREE.MeshBasicMaterial({ 
+            color: 0x00e5ff,
+            transparent: true,
+            opacity: 0.9
+        })
+    );
+    rim.rotation.x = Math.PI/2;
+    rim.position.y = 7.5;
+    wellGroup.add(rim);
+    wellGroup.userData.rim = rim;
+
+    // Innerer Glow-Ring
+    const innerRim = new THREE.Mesh(
+        new THREE.TorusGeometry(14, 0.5, 12, 80),
+        new THREE.MeshBasicMaterial({ 
+            color: 0xaaffff, 
+            transparent: true, 
+            opacity: 0.4 
+        })
+    );
+    innerRim.rotation.x = Math.PI/2;
+    innerRim.position.y = 7.2;
+    wellGroup.add(innerRim);
+
+    // Wasser-Portal mit Emissive
+    const water = new THREE.Mesh(
+        new THREE.CircleGeometry(14.5, 64), 
+        new THREE.MeshStandardMaterial({ 
+            color: 0x00ddee, 
+            emissive: 0x00ccdd, 
+            emissiveIntensity: 2.5, 
+            transparent: true, 
+            opacity: 0.75,
+            metalness: 0.8,
+            roughness: 0.1
+        })
+    );
+    water.rotation.x = -Math.PI/2;
+    water.position.y = 7;
+    wellGroup.add(water);
+    wellGroup.userData.water = water;
+
+    // Ripple-Ringe
+    for(let r = 0; r < 4; r++) {
+        const ripple = new THREE.Mesh(
+            new THREE.RingGeometry(r * 3 + 2, r * 3 + 3, 64),
+            new THREE.MeshBasicMaterial({ 
+                color: 0x00ffcc, 
+                transparent: true, 
+                opacity: 0.25 - r * 0.05,
+                side: THREE.DoubleSide
+            })
+        );
+        ripple.rotation.x = -Math.PI/2;
+        ripple.position.y = 7.1;
+        wellGroup.add(ripple);
+        wellGroup.userData['ripple' + r] = ripple;
+    }
+
+    // Schwebende Runen-Ringe
+    const runeRing1 = new THREE.Mesh(
+        new THREE.RingGeometry(19, 20, 48),
+        new THREE.MeshBasicMaterial({ 
+            color: 0xbd00ff, 
+            transparent: true, 
+            opacity: 0.3,
+            side: THREE.DoubleSide
+        })
+    );
+    runeRing1.rotation.x = -Math.PI/2;
+    runeRing1.position.y = 0.5;
+    wellGroup.add(runeRing1);
+    wellGroup.userData.runeRing1 = runeRing1;
+
+    const runeRing2 = new THREE.Mesh(
+        new THREE.RingGeometry(22, 23, 48),
+        new THREE.MeshBasicMaterial({ 
+            color: 0x00e5ff, 
+            transparent: true, 
+            opacity: 0.2,
+            side: THREE.DoubleSide
+        })
+    );
+    runeRing2.rotation.x = -Math.PI/2;
+    runeRing2.position.y = -0.5;
+    wellGroup.add(runeRing2);
+    wellGroup.userData.runeRing2 = runeRing2;
+
+    // Pipeline mit Glow
+    const pipeGeo = new THREE.CylinderGeometry(config.pipeRadius, config.pipeRadius, 120, 32, 1, true);
+    const pipeMat = new THREE.MeshStandardMaterial({ 
+        color: 0xbd00ff, 
+        transparent: true, 
+        opacity: 0.25, 
+        wireframe: true,
+        emissive: 0xbd00ff,
+        emissiveIntensity: 0.5
+    });
+    const pipeline = new THREE.Mesh(pipeGeo, pipeMat);
+    pipeline.position.y = -60;
+    wellGroup.add(pipeline);
+
+    wellGroup.position.y = config.wellY;
+    scene.add(wellGroup);
+}
+
+function createGuardian() {
+    guardian = new THREE.Group();
+    
+    const bodyMat = new THREE.MeshStandardMaterial({ color: 0x00aa55, roughness: 0.6, metalness: 0.2 });
+    const body = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 2, 4, 16), bodyMat);
+    body.castShadow = true;
+    guardian.add(body);
+    
+    headGroup = new THREE.Group();
+    headGroup.position.y = 3.2;
+
+    const skinMat = new THREE.MeshStandardMaterial({ color: 0xffdbac });
+    const head = new THREE.Mesh(new THREE.SphereGeometry(1.3, 16, 16), skinMat);
+    headGroup.add(head);
+
+    const eyeGeo = new THREE.SphereGeometry(0.15, 8, 8);
+    const eyeMat = new THREE.MeshBasicMaterial({ color: 0x000000 });
+    const eyeL = new THREE.Mesh(eyeGeo, eyeMat);
+    eyeL.position.set(0.4, 0.2, 1.1);
+    const eyeR = new THREE.Mesh(eyeGeo, eyeMat);
+    eyeR.position.set(-0.4, 0.2, 1.1);
+    headGroup.add(eyeL, eyeR);
+
+    const beardGeo = new THREE.ConeGeometry(1, 2, 8);
+    const beardMat = new THREE.MeshStandardMaterial({ color: 0xff8800 });
+    const beard = new THREE.Mesh(beardGeo, beardMat);
+    beard.position.set(0, -0.6, 0.8);
+    beard.rotation.x = -0.4;
+    headGroup.add(beard);
+
+    const earGeo = new THREE.ConeGeometry(0.3, 0.8, 4);
+    const earL = new THREE.Mesh(earGeo, skinMat);
+    earL.position.set(1.3, 0.2, 0);
+    earL.rotation.z = -Math.PI/3;
+    const earR = new THREE.Mesh(earGeo, skinMat);
+    earR.position.set(-1.3, 0.2, 0);
+    earR.rotation.z = Math.PI/3;
+    headGroup.add(earL, earR);
+
+    const hatGroup = new THREE.Group();
+    const hatBase = new THREE.Mesh(new THREE.CylinderGeometry(1.8, 1.8, 0.2, 16), new THREE.MeshStandardMaterial({ color: 0x004422 }));
+    hatBase.position.y = 1;
+    const hatTop = new THREE.Mesh(new THREE.CylinderGeometry(1, 1.3, 2, 16), new THREE.MeshStandardMaterial({ color: 0x004422 }));
+    hatTop.position.y = 2;
+    const buckle = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.5, 0.2), new THREE.MeshStandardMaterial({ color: 0xffd700 }));
+    buckle.position.set(0, 1.5, 1.2);
+    hatGroup.add(hatBase, hatTop, buckle);
+    headGroup.add(hatGroup);
+
+    guardian.add(headGroup);
+
+    const armGeo = new THREE.CylinderGeometry(0.3, 0.3, 2, 8);
+    leftArm = new THREE.Mesh(armGeo, bodyMat);
+    leftArm.position.set(1.8, 0.5, 0);
+    leftArm.rotation.z = -Math.PI/4;
+    
+    rightArm = new THREE.Mesh(armGeo, bodyMat);
+    rightArm.position.set(-1.8, 0.5, 0);
+    rightArm.rotation.z = Math.PI/4;
+    
+    guardian.add(leftArm, rightArm);
+
+    // Mehrere Aura-Ringe
+    const aura1 = new THREE.Mesh(new THREE.TorusGeometry(3.5, 0.08, 16, 100), new THREE.MeshBasicMaterial({ color: 0x00ff88, transparent: true, opacity: 0.3 }));
+    aura1.rotation.x = Math.PI/2;
+    guardian.add(aura1);
+    wellGroup.userData.aura1 = aura1;
+    
+    const aura2 = new THREE.Mesh(new THREE.TorusGeometry(4.2, 0.05, 16, 100), new THREE.MeshBasicMaterial({ color: 0xffd700, transparent: true, opacity: 0.2 }));
+    aura2.rotation.x = Math.PI/2;
+    guardian.add(aura2);
+    wellGroup.userData.aura2 = aura2;
+    
+    // Glitzer-Partikel um Kobold
+    const sparkleGeo = new THREE.BufferGeometry();
+    const sparklePos = new Float32Array(50 * 3);
+    for(let i = 0; i < 50; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const radius = 4 + Math.random() * 2;
+        sparklePos[i*3] = Math.cos(angle) * radius;
+        sparklePos[i*3+1] = (Math.random() - 0.5) * 6;
+        sparklePos[i*3+2] = Math.sin(angle) * radius;
+    }
+    sparkleGeo.setAttribute('position', new THREE.BufferAttribute(sparklePos, 3));
+    const sparkleMat = new THREE.PointsMaterial({ size: 0.3, color: 0xffd700, transparent: true, opacity: 0.8 });
+    const sparkles = new THREE.Points(sparkleGeo, sparkleMat);
+    guardian.add(sparkles);
+    wellGroup.userData.sparkles = sparkles;
+    
+    guardian.position.set(22, config.wellY + 5, 0);
+    scene.add(guardian);
+}
+
+function createCoin() {
+    coin = new THREE.Group();
+    const mesh = new THREE.Mesh(
+        new THREE.CylinderGeometry(2, 2, 0.5, 32), 
+        new THREE.MeshStandardMaterial({ 
+            color: 0x00e5ff, 
+            emissive: 0x00ddff, 
+            emissiveIntensity: 3,
+            metalness: 0.9,
+            roughness: 0.1
+        })
+    );
+    mesh.castShadow = true;
+    coin.add(mesh);
+    
+    // Glow-Ring um Münze
+    const glow = new THREE.Mesh(
+        new THREE.TorusGeometry(2.5, 0.15, 16, 32),
+        new THREE.MeshBasicMaterial({ color: 0xaaffff, transparent: true, opacity: 0.6 })
+    );
+    glow.rotation.x = Math.PI/2;
+    coin.add(glow);
+    coin.userData.glow = glow;
+    
+    coin.position.copy(coinPhys.pos);
+    scene.add(coin);
+}
+
+function startFlip() {
+    if (state !== "READY") return;
+    state = "FLIPPING";
+    coinPhys.vel.set(0, config.flipForceY, config.flipForceZ);
+    document.getElementById('instruction').style.opacity = '0';
+    document.getElementById('guardian-status').innerText = "Beobachtet...";
+}
+
+function resetRitual() {
+    document.getElementById('message-box').classList.remove('active');
+    document.getElementById('instruction').style.opacity = '1';
+    document.getElementById('guardian-status').innerText = "Bereit";
+    coin.visible = true;
+    coinPhys.pos.set(0, 38, 60);
+    coinPhys.vel.set(0, 0, 0);
+    state = "READY";
+}
+
+function animate() {
+    requestAnimationFrame(animate);
+    const time = clock.getElapsedTime();
+
+    starFields.forEach(field => { field.rotation.y += field.userData.speed; });
+    
+    // Brunnen-Animationen
+    if(wellGroup.userData.water) {
+        wellGroup.userData.water.material.emissiveIntensity = 2.5 + Math.sin(time * 2) * 0.5;
+    }
+    if(wellGroup.userData.rim) {
+        wellGroup.userData.rim.material.opacity = 0.9 + Math.sin(time * 3) * 0.1;
+    }
+    for(let r = 0; r < 4; r++) {
+        const ripple = wellGroup.userData['ripple' + r];
+        if(ripple) {
+            ripple.material.opacity = (0.25 - r * 0.05) * (0.5 + 0.5 * Math.sin(time * 1.5 - r * 0.8));
+            ripple.scale.setScalar(1 + 0.05 * Math.sin(time * 1.8 - r * 0.5));
+        }
+    }
+    if(wellGroup.userData.runeRing1) {
+        wellGroup.userData.runeRing1.rotation.z += 0.002;
+    }
+    if(wellGroup.userData.runeRing2) {
+        wellGroup.userData.runeRing2.rotation.z -= 0.0015;
+    }
+    
+    // Kobold-Animationen
+    guardian.position.y = config.wellY + 4 + Math.sin(time * 1.5) * 1.5;
+    headGroup.rotation.y = Math.sin(time * 0.5) * 0.2;
+    headGroup.rotation.x = Math.sin(time * 0.8) * 0.1;
+    
+    if(wellGroup.userData.aura1) {
+        wellGroup.userData.aura1.rotation.z += 0.01;
+    }
+    if(wellGroup.userData.aura2) {
+        wellGroup.userData.aura2.rotation.z -= 0.008;
+    }
+    if(wellGroup.userData.sparkles) {
+        wellGroup.userData.sparkles.rotation.y += 0.005;
+    }
+
+    const lookPos = coin.position.clone();
+    guardian.lookAt(lookPos.x, guardian.position.y, lookPos.z);
+    
+    // Coin-Glow pulsiert
+    if(coin.userData.glow) {
+        coin.userData.glow.material.opacity = 0.6 + Math.sin(time * 4) * 0.3;
+        coin.userData.glow.rotation.z += 0.03;
+    }
+
+    if (state === "READY") {
+        leftArm.rotation.z = -Math.PI/3 + Math.sin(time * 2) * 0.2;
+        rightArm.rotation.z = Math.PI/3 - Math.sin(time * 2) * 0.2;
+    } else {
+        leftArm.rotation.z = -Math.PI/1.2; 
+        rightArm.rotation.z = Math.PI/1.2;
+    }
+
+    if (state === "READY") {
+        const orbitRadius = 140;
+        camPos.lerp(new THREE.Vector3(Math.sin(time * 0.2) * orbitRadius, 70, Math.cos(time * 0.2) * orbitRadius), 0.05);
+        camTarget.lerp(new THREE.Vector3(0, 30, 0), 0.05);
+        coin.position.y = 38 + Math.sin(time * 3) * 1;
+        coin.rotation.z += 0.05;
+    } 
+    else if (state === "FLIPPING") {
+        coinPhys.vel.y += config.gravity;
+        coinPhys.pos.add(coinPhys.vel);
+        coin.position.copy(coinPhys.pos);
+        coin.rotation.x += 0.2;
+        
+        camPos.lerp(new THREE.Vector3(coin.position.x + 50, coin.position.y + 20, coin.position.z + 60), 0.1);
+        camTarget.lerp(coin.position, 0.2);
+
+        if (coinPhys.vel.y < 0 && coinPhys.pos.y <= config.wellY + 8) {
+            const dist = Math.sqrt(coinPhys.pos.x**2 + coinPhys.pos.z**2);
+            if (dist < 15) {
+                state = "PIPELINE";
+                coinPhys.pos.x = 0; coinPhys.pos.z = 0;
+                document.getElementById('guardian-status').innerText = "Verarbeitet...";
+            }
+        }
+        if (coinPhys.pos.y < -200) resetRitual();
+    }
+    else if (state === "PIPELINE") {
+        coin.position.y -= config.pipeSpeed;
+        coin.rotation.z += 0.8;
+        
+        camPos.lerp(new THREE.Vector3(30, coin.position.y + 40, 50), 0.2);
+        camTarget.lerp(new THREE.Vector3(0, coin.position.y - 20, 0), 0.2);
+
+        if (coin.position.y <= config.wellY + config.potY + 5) {
+            state = "LANDED";
+            coin.visible = false;
+            document.getElementById('message-box').classList.add('active');
+            document.getElementById('guardian-status').innerText = "Abgeschlossen";
+            
+            guardian.position.set(15, config.wellY + config.potY + 10, 0);
+        }
+    }
+    else if (state === "LANDED") {
+        camPos.lerp(new THREE.Vector3(30, config.wellY + config.potY + 20, 40), 0.05);
+        camTarget.lerp(guardian.position, 0.05);
+    }
+
+    camera.position.copy(camPos);
+    camera.lookAt(camTarget);
+    renderer.render(scene, camera);
+}
+
+window.addEventListener('keydown', (e) => { if (e.code === 'Space') startFlip(); });
+window.addEventListener('mousedown', (e) => { this.startY = e.clientY; });
+window.addEventListener('mouseup', (e) => { if (this.startY - e.clientY > 50) startFlip(); });
+window.addEventListener('touchstart', (e) => { this.startY = e.touches[0].clientY; });
+window.addEventListener('touchend', (e) => { if (this.startY - e.changedTouches[0].clientY > 50) startFlip(); });
+
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+window.onload = init;
+</script>
+</body>
+</html>

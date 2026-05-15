@@ -60,7 +60,7 @@ const LAYERS = [
   {
     title: "API & Infrastruktur",
     color: "#f0d060",
-    items: ["/api/petitions", "/api/news", "/api/vacancies (Match-Orchestrator)", "/api/seed", "/api/cron/resonanz", "Resend Email (Parent Relay Only)"],
+    items: ["/api/petitions", "/api/wishes", "/api/news", "/api/vacancies (Match-Orchestrator)", "/api/seed", "/api/cron/resonanz", "Resend Email (Parent Relay Only)"],
   },
 ];
 
@@ -400,6 +400,9 @@ export default function SystemPage() {
               { label: "Fürbitte-Hub",        href: "/portal/furbitte",          color: "#00bcd4" },
               { label: "Charta der Würde",    href: "/portal/charta",            color: "#d4af37" },
               { label: "Genesis-Moment",      href: "/portal/welcome-origin",    color: "#d4af37" },
+              { label: "Wunschbrunnen 🌊",    href: "/portal/wunschbrunnen",     color: "#00e5ff" },
+              { label: "Cosmic Splitscreen",  href: "/portal/splitscreen",       color: "#9b59ff" },
+              { label: "Meine Fürbitten",     href: "/portal/petitions",         color: "#4caf7d" },
             ].map((link) => (
               <Link
                 key={link.href}

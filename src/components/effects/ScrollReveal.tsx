@@ -24,22 +24,24 @@ export default function ScrollReveal({
     if (!el) return;
 
     const transforms: Record<string, string> = {
-      up:    "translateY(30px)",
-      down:  "translateY(-30px)",
-      left:  "translateX(30px)",
-      right: "translateX(-30px)",
+      up:    "translateY(20px)",
+      down:  "translateY(-20px)",
+      left:  "translateX(20px)",
+      right: "translateX(-20px)",
       none:  "none",
     };
 
     el.style.opacity = "0";
     el.style.transform = transforms[direction];
-    el.style.transition = `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms`;
+    el.style.filter = "blur(3px)";
+    el.style.transition = `opacity 0.9s cubic-bezier(0.23,1,0.32,1) ${delay}ms, transform 0.9s cubic-bezier(0.23,1,0.32,1) ${delay}ms, filter 0.9s cubic-bezier(0.23,1,0.32,1) ${delay}ms`;
 
     const obs = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           el.style.opacity = "1";
           el.style.transform = "none";
+          el.style.filter = "blur(0)";
           obs.unobserve(el);
         }
       },

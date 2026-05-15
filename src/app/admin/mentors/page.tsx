@@ -6,7 +6,7 @@ export default async function MentorValidationPage() {
   const session = await auth();
   const user = session?.user as any;
 
-  if (!user || user.role !== "SUPER_ADMIN") redirect("/login");
+  if (!user || (user.role !== "SUPER_ADMIN" && user.role !== "TENANT_ADMIN")) redirect("/login");
 
   return (
     <main className="min-h-screen bg-sacred px-6 py-12">

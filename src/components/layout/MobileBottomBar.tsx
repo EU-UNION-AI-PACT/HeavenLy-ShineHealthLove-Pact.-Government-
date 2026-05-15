@@ -24,8 +24,10 @@ const MORE_LINKS = [
 
 export default function MobileBottomBar() {
   const [moreOpen, setMoreOpen] = useState(false);
+  const [mounted, setMounted]   = useState(false);
   const pathname = usePathname();
 
+  useEffect(() => { setMounted(true); }, []);
   useEffect(() => { setMoreOpen(false); }, [pathname]);
 
   return (
@@ -83,11 +85,12 @@ export default function MobileBottomBar() {
           }}
         >
           {MORE_LINKS.map((l) => {
-            const active = pathname === l.href;
+            const active = mounted && pathname === l.href;
             return (
               <Link
                 key={l.href}
                 href={l.href}
+                suppressHydrationWarning
                 style={{
                   display: "flex",
                   flexDirection: "column",
@@ -110,6 +113,7 @@ export default function MobileBottomBar() {
                   {l.icon}
                 </span>
                 <span
+                  suppressHydrationWarning
                   style={{
                     fontFamily: "var(--font-ceremonial)",
                     fontSize: "0.5rem",
@@ -147,11 +151,12 @@ export default function MobileBottomBar() {
       >
         {/* main tabs */}
         {TAB_LINKS.map((t) => {
-          const active = pathname === t.href || pathname.startsWith(t.href + "/");
+          const active = mounted && (pathname === t.href || pathname.startsWith(t.href + "/"));
           return (
             <Link
               key={t.href}
               href={t.href}
+              suppressHydrationWarning
               style={{
                 flex: 1,
                 display: "flex",

@@ -2,6 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 
+function hexToRgba(hex: string, alpha: number): string {
+  const h = hex.replace("#", "");
+  const r = parseInt(h.substring(0, 2), 16);
+  const g = parseInt(h.substring(2, 4), 16);
+  const b = parseInt(h.substring(4, 6), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
 interface Node {
   id: string;
   x: number;
@@ -193,7 +201,7 @@ export default function SystemCanvas() {
 
       // glow halo
       const glow = ctx.createRadialGradient(x, y, 0, x, y, r * 3);
-      glow.addColorStop(0, node.color.replace(")", ",0.15)").replace("rgb", "rgba").replace("#", "rgba(") );
+      glow.addColorStop(0, hexToRgba(node.color, 0.15));
       glow.addColorStop(1, "rgba(0,0,0,0)");
       ctx.beginPath();
       ctx.arc(x, y, r * 3, 0, Math.PI * 2);

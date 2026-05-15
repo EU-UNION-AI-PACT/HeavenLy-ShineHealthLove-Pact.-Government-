@@ -17,16 +17,18 @@ const PILLARS = [
 ];
 
 const FOOTER_LINKS = [
-  { href: "/portal",           label: "Pilger-Portal" },
-  { href: "/portal/guardian",  label: "Eltern-Passage" },
-  { href: "/portal/wishes",    label: "Wünsche" },
-  { href: "/portal/furbitte",  label: "Fürbitte" },
-  { href: "/shinehealthcare",  label: "ShineHealthCare" },
-  { href: "/portal/charta",    label: "Charta" },
-  { href: "/portal/stories",   label: "Archiv" },
-  { href: "/system",           label: "System-Karte" },
-  { href: "/admin",            label: "Admin" },
-  { href: "/login",            label: "Anmelden" },
+  { href: "/portal",                  label: "Pilger-Portal" },
+  { href: "/portal/guardian",         label: "Eltern-Passage" },
+  { href: "/portal/wishes",           label: "Wünsche" },
+  { href: "/portal/furbitte",         label: "Fürbitte" },
+  { href: "/portal/wunschbrunnen",    label: "Wunschbrunnen 🌊" },
+  { href: "/portal/splitscreen",      label: "Cosmic Split ⬡" },
+  { href: "/shinehealthcare",         label: "ShineHealthCare" },
+  { href: "/portal/charta",           label: "Charta" },
+  { href: "/portal/stories",          label: "Archiv" },
+  { href: "/system",                  label: "System-Karte" },
+  { href: "/admin",                   label: "Admin" },
+  { href: "/login",                   label: "Anmelden" },
 ];
 
 export default function HomePage() {
@@ -93,8 +95,8 @@ export default function HomePage() {
       <div style={{ position: "relative", zIndex: 2, maxWidth: "1100px", margin: "0 auto", padding: "0 1.5rem 6rem" }}>
 
         {/* ══ HERO ══════════════════════════════════════════════════════════ */}
-        <header style={{ textAlign: "center", paddingTop: "8rem", paddingBottom: "6rem" }}>
-          <p className="font-ceremonial" style={{ fontSize: "0.6rem", letterSpacing: "0.4em", color: "#d4af37", opacity: 0.5, marginBottom: "1.5rem" }}>
+        <header style={{ textAlign: "center", paddingTop: "9rem", paddingBottom: "7rem" }}>
+          <p className="font-ceremonial" style={{ fontSize: "0.55rem", letterSpacing: "0.5em", color: "#d4af37", opacity: 0.4, marginBottom: "2rem" }}>
             ✦ &nbsp; HEILIGES JAHR 2026 &nbsp; ✦
           </p>
 
@@ -102,11 +104,11 @@ export default function HomePage() {
             className="text-shimmer animate-glory-pulse"
             style={{
               fontFamily: "var(--font-ceremonial)",
-              fontSize: "clamp(2.4rem, 7vw, 5rem)",
-              letterSpacing: "0.12em",
+              fontSize: "clamp(2.2rem, 6.5vw, 4.5rem)",
+              letterSpacing: "0.1em",
               textTransform: "uppercase",
-              lineHeight: 1.1,
-              marginBottom: "1.5rem",
+              lineHeight: 1.15,
+              marginBottom: "1.8rem",
             }}
           >
             GloryaShine<br />
@@ -115,20 +117,21 @@ export default function HomePage() {
 
           <p style={{
             fontFamily: "var(--font-quote)",
-            fontSize: "clamp(1.1rem, 2.5vw, 1.5rem)",
+            fontSize: "clamp(1.05rem, 2.2vw, 1.4rem)",
             fontStyle: "italic",
-            color: "rgba(249,241,215,0.72)",
-            maxWidth: "640px",
-            margin: "0 auto 0.75rem",
-            lineHeight: 1.5,
+            color: "rgba(249,241,215,0.65)",
+            maxWidth: "600px",
+            margin: "0 auto 1rem",
+            lineHeight: 1.6,
           }}>
             Gottes Heilender Pfad — Die Übergangsfrequenz der heiligen Passagen
           </p>
           <p style={{
             fontFamily: "var(--font-body)",
-            fontSize: "0.95rem",
-            color: "rgba(249,241,215,0.45)",
-            marginBottom: "3rem",
+            fontSize: "0.92rem",
+            color: "rgba(249,241,215,0.38)",
+            marginBottom: "3.5rem",
+            letterSpacing: "0.03em",
           }}>
             ShineHealthCare · Pilgerzentrum Detmold · Heiliges Jahr 2026
           </p>
@@ -147,10 +150,10 @@ export default function HomePage() {
           </div>
 
           {/* passage ornament line */}
-          <div style={{ marginTop: "4rem", display: "flex", alignItems: "center", gap: "1rem" }}>
-            <div style={{ flex: 1, height: "1px", background: "linear-gradient(90deg, transparent, rgba(212,175,55,0.3))" }} />
-            <span style={{ fontFamily: "var(--font-ceremonial)", fontSize: "0.5rem", letterSpacing: "3px", color: "rgba(212,175,55,0.4)" }}>DREI PASSAGEN · EIN HEILIGER PFAD · EIN ZEUGNIS</span>
-            <div style={{ flex: 1, height: "1px", background: "linear-gradient(90deg, rgba(212,175,55,0.3), transparent)" }} />
+          <div style={{ marginTop: "5rem", display: "flex", alignItems: "center", gap: "1.5rem" }}>
+            <div style={{ flex: 1, height: "1px", background: "linear-gradient(90deg, transparent, rgba(212,175,55,0.2))" }} />
+            <span style={{ fontFamily: "var(--font-ceremonial)", fontSize: "0.45rem", letterSpacing: "4px", color: "rgba(212,175,55,0.3)" }}>DREI PASSAGEN · EIN HEILIGER PFAD · EIN ZEUGNIS</span>
+            <div style={{ flex: 1, height: "1px", background: "linear-gradient(90deg, rgba(212,175,55,0.2), transparent)" }} />
           </div>
         </header>
 
@@ -318,7 +321,7 @@ export default function HomePage() {
         </ScrollReveal>
 
         {/* ══ FOOTER ════════════════════════════════════════════════════════ */}
-        <footer style={{ textAlign: "center", marginTop: "5rem", paddingTop: "3rem", borderTop: "1px solid rgba(212,175,55,0.15)" }}>
+        <footer style={{ textAlign: "center", marginTop: "6rem", paddingTop: "3.5rem", borderTop: "1px solid rgba(212,175,55,0.1)" }}>
           <div style={{ marginBottom: "2rem" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "1rem", marginBottom: "1.5rem" }}>
               <div style={{ width: "40px", height: "1px", background: "rgba(212,175,55,0.3)" }} />

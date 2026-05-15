@@ -18,16 +18,17 @@ function formatCountdown(diff: number) {
 }
 
 export default function CalendarWidget() {
-  const [now, setNow] = useState(Date.now());
+  const [now, setNow] = useState<number | null>(null);
 
   useEffect(() => {
+    setNow(Date.now());
     const t = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(t);
   }, []);
 
   const yearStart = new Date("2026-01-01T00:00:00Z").getTime();
   const yearEnd   = new Date("2027-01-01T00:00:00Z").getTime();
-  const yearProgress = Math.max(0, Math.min(100, ((now - yearStart) / (yearEnd - yearStart)) * 100));
+  const yearProgress = now === null ? 0 : Math.max(0, Math.min(100, ((now - yearStart) / (yearEnd - yearStart)) * 100));
 
   return (
     <section className="bg-glass rounded-none mb-20 p-6" style={{ border: "1px solid var(--border-gold)" }}>
@@ -80,7 +81,7 @@ export default function CalendarWidget() {
       {/* Countdown per station */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {STATIONS.map((s) => {
-          const diff = (s.date.getTime() - now) / 1000;
+          const diff = now === null ? Infinity : (s.date.getTime() - now) / 1000;
           const passed = diff <= 0;
           return (
             <div key={s.label} className="text-center">
@@ -99,7 +100,7 @@ export default function CalendarWidget() {
                   textShadow: `0 0 12px ${s.color}`,
                 }}
               >
-                {formatCountdown(diff)}
+                {now === null ? "—" : formatCountdown(diff)}
               </div>
             </div>
           );

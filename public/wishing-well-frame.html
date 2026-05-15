@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SHINE — Cosmic Atlas & Sacred Wishing Well of Ireland</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --gold:#d4af37;--gold-bright:#f0d060;--gold-dim:rgba(212,175,55,0.12);
+  --cyan:#00e5ff;--violet:#9b59ff;--green:#00ff88;--bg:#020308;
+  --glass-bg:rgba(2,3,8,0.78);--glass-border:rgba(212,175,55,0.18);
+}
+html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);
+  font-family:'Inter',sans-serif;color:rgba(249,241,215,0.88);display:flex;flex-direction:column;}
+
+/* ─── HEADER ─────────────────────────────────────── */
+.hdr{height:48px;flex-shrink:0;display:flex;align-items:center;
+  justify-content:space-between;padding:0 1.5rem;
+  background:rgba(2,3,8,0.98);position:relative;z-index:300;}
+.hdr::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(212,175,55,0.5) 30%,rgba(0,229,255,0.35) 70%,transparent);}
+.hdr-logo{font-family:'Cinzel',serif;font-size:0.78rem;font-weight:700;letter-spacing:0.3em;
+  background:linear-gradient(90deg,var(--gold),#fff 50%,var(--cyan));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hdr-tag{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.75rem;
+  color:rgba(212,175,55,0.5);letter-spacing:0.04em;}
+.hdr-badge{font-family:'Cinzel',serif;font-size:0.4rem;letter-spacing:3px;
+  color:rgba(0,229,255,0.4);border:1px solid rgba(0,229,255,0.15);padding:3px 10px;}
+
+/* ─── SPLIT ──────────────────────────────────────── */
+.split{display:flex;flex:1;min-height:0;position:relative;}
+.pane{position:relative;overflow:hidden;flex:1;
+  transition:flex 0.5s cubic-bezier(0.16,1,0.3,1);}
+.pane:hover{flex:1.5;}
+#pA{background:#010106;}
+#pA iframe{width:100%;height:100%;border:none;display:block;}
+#pW{background:var(--bg);}
+.pane-lbl{position:absolute;bottom:14px;font-family:'Cinzel',serif;
+  font-size:0.4rem;letter-spacing:4px;color:rgba(212,175,55,0.3);
+  pointer-events:none;z-index:10;text-transform:uppercase;}
+
+/* ─── DIVIDER ─────────────────────────────────────── */
+.dvd{width:2px;cursor:col-resize;flex-shrink:0;position:relative;z-index:100;
+  background:linear-gradient(180deg,transparent,rgba(212,175,55,0.7) 20%,
+    rgba(0,229,255,0.7) 50%,rgba(155,89,255,0.7) 80%,transparent);
+  transition:width 0.2s;}
+.dvd:hover{width:4px;}
+.dvd-h{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:26px;height:26px;border-radius:50%;background:rgba(2,3,8,0.96);
+  border:1px solid rgba(212,175,55,0.45);display:flex;align-items:center;
+  justify-content:center;font-size:0.68rem;color:rgba(212,175,55,0.7);
+  pointer-events:none;box-shadow:0 0 14px rgba(212,175,55,0.18);}
+
+/* ─── CANVAS ─────────────────────────────────────── */
+#wc{position:absolute;inset:0;}
+#wc canvas{display:block;width:100%!important;height:100%!important;}
+
+/* ─── CRYSTAL GLASS ──────────────────────────────── */
+.glass{
+  background:linear-gradient(135deg,rgba(255,255,255,0.055) 0%,rgba(255,255,255,0.015) 100%);
+  backdrop-filter:blur(1px) saturate(160%);-webkit-backdrop-filter:blur(1px) saturate(160%);
+  border:1px solid rgba(212,175,55,0.35);border-top:1px solid rgba(255,255,255,0.15);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.1),0 4px 24px rgba(0,0,0,0.5);}
+
+/* ─── UI LAYER ────────────────────────────────────── */
+.wui{position:absolute;inset:0;pointer-events:none;z-index:100;
+  display:flex;flex-direction:column;justify-content:space-between;padding:1rem;gap:0;}
+.wui .c{pointer-events:auto;}
+
+/* TOP BAR */
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:0.65rem;}
+.tc{padding:0.8rem 1rem;flex:1;}
+.tc-title{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:3px;font-weight:700;
+  background:linear-gradient(90deg,rgba(255,255,255,0.92),var(--cyan));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.tc-sub{font-size:0.38rem;color:rgba(0,229,255,0.4);letter-spacing:2.5px;text-transform:uppercase;margin-top:2px;}
+#gstatus{font-family:'Cormorant Garamond',serif;font-size:0.72rem;font-style:italic;
+  color:rgba(212,175,55,0.65);margin-top:3px;}
+.tc-r{padding:0.8rem 1rem;text-align:right;min-width:145px;}
+.tc-rl{font-size:0.38rem;letter-spacing:2.5px;color:rgba(155,89,255,0.5);text-transform:uppercase;}
+#cwn{font-family:'Cinzel',serif;font-size:0.6rem;color:rgba(255,255,255,0.88);margin-top:3px;line-height:1.35;}
+#wcnt{font-family:'Cinzel',serif;font-size:0.38rem;color:rgba(0,229,255,0.35);letter-spacing:2px;margin-top:3px;}
+
+/* WELL DATA CARD */
+#wdc{position:absolute;top:68px;right:1rem;width:238px;opacity:0;
+  transform:translateX(16px) scale(0.97);pointer-events:none;
+  transition:opacity 0.6s cubic-bezier(0.16,1,0.3,1),transform 0.6s cubic-bezier(0.16,1,0.3,1);
+  border-top:2px solid var(--gold);}
+#wdc.show{opacity:1;transform:translateX(0) scale(1);}
+#wdc-inner{padding:1rem 1.1rem;}
+#wdc-name{font-family:'Cinzel',serif;font-size:0.72rem;font-weight:700;
+  color:var(--gold);margin-bottom:0.7rem;line-height:1.3;}
+.wf{margin-bottom:0.6rem;}
+.wfl{font-family:'Cinzel',serif;font-size:0.37rem;letter-spacing:2.5px;
+  color:rgba(0,229,255,0.4);text-transform:uppercase;margin-bottom:3px;
+  display:flex;align-items:center;gap:4px;}
+.wfl::before{content:'';display:inline-block;width:10px;height:1px;background:rgba(0,229,255,0.3);}
+.wfv{font-family:'Cormorant Garamond',serif;font-size:0.8rem;
+  color:rgba(249,241,215,0.78);line-height:1.5;}
+.wtags{display:flex;flex-wrap:wrap;gap:4px;margin-top:0.65rem;padding-top:0.6rem;
+  border-top:1px solid rgba(255,255,255,0.05);}
+.wtag{font-family:'Cinzel',serif;font-size:0.36rem;letter-spacing:1px;
+  padding:3px 8px;background:rgba(155,89,255,0.1);border:1px solid rgba(155,89,255,0.25);
+  color:rgba(155,89,255,0.88);text-transform:uppercase;}
+
+/* MESSAGE BOX */
+#mbox{position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%) scale(0.88) translateY(10px);
+  opacity:0;visibility:hidden;
+  transition:opacity 0.6s cubic-bezier(0.16,1,0.3,1),transform 0.6s cubic-bezier(0.16,1,0.3,1),visibility 0s 0.6s;
+  pointer-events:none;width:calc(100% - 2rem);max-width:340px;border-top:2px solid var(--gold);}
+#mbox.on{opacity:1;visibility:visible;transform:translate(-50%,-50%) scale(1) translateY(0);
+  transition:opacity 0.6s cubic-bezier(0.16,1,0.3,1),transform 0.6s cubic-bezier(0.16,1,0.3,1),visibility 0s 0s;
+  pointer-events:auto;}
+#mbox-in{padding:1.65rem 1.4rem;text-align:center;}
+.mico{font-size:2.6rem;margin-bottom:0.8rem;display:block;filter:drop-shadow(0 0 12px rgba(212,175,55,0.6));}
+.mpre{font-family:'Cinzel',serif;font-size:0.38rem;letter-spacing:4px;
+  color:rgba(212,175,55,0.5);margin-bottom:0.6rem;text-transform:uppercase;}
+.mtitle{font-family:'Cinzel',serif;font-size:0.88rem;font-weight:700;
+  color:rgba(249,241,215,0.95);letter-spacing:1.5px;margin-bottom:0.6rem;line-height:1.3;}
+.mwell{font-family:'Cormorant Garamond',serif;font-size:0.92rem;font-style:italic;
+  color:var(--cyan);line-height:1.6;margin-bottom:0.5rem;}
+.mcure{font-family:'Cormorant Garamond',serif;font-size:0.83rem;
+  color:rgba(0,255,136,0.85);line-height:1.5;margin-bottom:0.7rem;}
+.mdesc{font-family:'Inter',sans-serif;font-size:0.66rem;
+  color:rgba(249,241,215,0.4);line-height:1.65;margin-bottom:1.2rem;}
+.mdiv{width:38px;height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,0.45),transparent);margin:0.9rem auto;}
+.mbtn{display:inline-block;font-family:'Cinzel',serif;font-size:0.52rem;letter-spacing:2.5px;
+  padding:0.7rem 1.6rem;background:transparent;border:1px solid rgba(212,175,55,0.4);
+  color:var(--gold);cursor:pointer;transition:all 0.3s;text-transform:uppercase;}
+.mbtn:hover{background:rgba(212,175,55,0.09);border-color:var(--gold);transform:translateY(-2px);}
+
+/* INSTRUCTION */
+#instr{align-self:center;padding:0.65rem 1.3rem;text-align:center;transition:opacity 0.5s;}
+.im{font-family:'Cormorant Garamond',serif;font-size:0.88rem;font-style:italic;
+  color:rgba(249,241,215,0.52);line-height:1.5;}
+.ih{margin-top:5px;display:flex;align-items:center;justify-content:center;gap:0.7rem;}
+.iht{font-family:'Cinzel',serif;font-size:0.4rem;letter-spacing:2px;color:rgba(0,229,255,0.5);text-transform:uppercase;}
+.isep{color:rgba(255,255,255,0.15);}
+kbd{display:inline-block;background:rgba(0,229,255,0.1);border:1px solid rgba(0,229,255,0.3);
+  padding:1px 6px;font-family:'Cinzel',serif;font-size:0.4rem;color:var(--cyan);}
+
+/* AMBIENT GLOW */
+.wglow{position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+  width:80%;height:35%;pointer-events:none;z-index:1;
+  background:radial-gradient(ellipse at 50% 100%,rgba(0,229,255,0.07) 0%,rgba(155,89,255,0.04) 40%,transparent 70%);}
+
+/* LIGHTNING EDGE on card hover */
+@keyframes lsweep{0%{left:-80%;opacity:0}10%{opacity:1}60%{left:120%;opacity:1}100%{left:120%;opacity:0}}
+.glass::after{content:'';position:absolute;top:0;left:-80%;width:35%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.85),rgba(212,175,55,1),rgba(255,255,255,0.85),transparent);
+  opacity:0;pointer-events:none;}
+.glass:hover::after{animation:lsweep 0.7s ease-out forwards;}
+.glass{position:relative;overflow:hidden;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.wui{animation:fadeUp 0.9s ease both;}
+</style>
+</head>
+<body>
+<script>
+(function(){
+  if(new URLSearchParams(window.location.search).get('solo')==='1'){
+    var s=document.createElement('style');
+    s.textContent=[
+      '#pA,#dvd,.hdr{display:none!important;}',
+      'html,body{overflow:hidden;width:100vw;height:100vh;}',
+      '.split{display:block!important;width:100vw!important;height:100vh!important;}',
+      '#pW{position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;flex:unset!important;}',
+      '#wc{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;}',
+      '#wc canvas{width:100%!important;height:100%!important;display:block!important;}'
+    ].join('');
+    document.head.appendChild(s);
+    window.addEventListener('load',function(){
+      requestAnimationFrame(function(){
+        requestAnimationFrame(function(){
+          var wc=document.getElementById('wc');
+          if(wc&&window.__threeRenderer){
+            window.__threeRenderer.setSize(wc.clientWidth,wc.clientHeight);
+            if(window.__threeCamera){window.__threeCamera.aspect=wc.clientWidth/wc.clientHeight;window.__threeCamera.updateProjectionMatrix();}
+          }
+          var ro=new ResizeObserver(function(){
+            var wc2=document.getElementById('wc');
+            if(!wc2||!wc2.clientWidth||!wc2.clientHeight)return;
+            if(window.__threeRenderer){window.__threeRenderer.setSize(wc2.clientWidth,wc2.clientHeight);}
+            if(window.__threeCamera){window.__threeCamera.aspect=wc2.clientWidth/wc2.clientHeight;window.__threeCamera.updateProjectionMatrix();}
+          });
+          ro.observe(document.getElementById('pW'));
+        });
+      });
+    });
+  }
+})();
+</script>
+
+<header class="hdr">
+  <div class="hdr-logo">SHINE // WORLDS IN DIALOGUE</div>
+  <div class="hdr-tag">Cosmic Artifact Atlas &amp; The Sacred Wells of Ireland</div>
+  <div class="hdr-badge">650 Wells · Ireland · IHWCBC · Holy Year 2026</div>
+</header>
+
+<div class="split" id="sw">
+  <div class="pane" id="pA">
+    <iframe src="https://cosmic-artifact-atlas.lovable.app/" title="Cosmic Artifact Atlas" allow="fullscreen" loading="lazy"></iframe>
+    <div class="pane-lbl" style="left:16px;">✦ &nbsp;COSMIC ARTIFACT ATLAS</div>
+  </div>
+  <div class="dvd" id="dvd"><div class="dvd-h">⟺</div></div>
+  <div class="pane" id="pW">
+    <div id="wc"></div>
+    <div class="wglow"></div>
+    <div class="wui">
+      <div class="top">
+        <div class="glass tc">
+          <div class="tc-title">WISHING WELL</div>
+          <div class="tc-sub">Sacred Sites of Ireland · Holy Year 2026</div>
+          <div id="gstatus">Der Kobold wartet auf deinen Wunsch…</div>
+        </div>
+        <div class="glass tc-r">
+          <div class="tc-rl">Aktueller Brunnen</div>
+          <div id="cwn">—</div>
+          <div id="wcnt">WELL 0 / 20</div>
+        </div>
+      </div>
+
+      <div id="wdc" class="glass">
+        <div id="wdc-inner">
+          <div id="wdc-name">—</div>
+          <div class="wf"><div class="wfl">Ort</div><div class="wfv" id="wdc-loc">—</div></div>
+          <div class="wf"><div class="wfl">Heilwirkung</div><div class="wfv" id="wdc-cure">—</div></div>
+          <div class="wf"><div class="wfl">Beschreibung</div><div class="wfv" id="wdc-desc">—</div></div>
+          <div class="wf"><div class="wfl">Gaben</div><div class="wfv" id="wdc-off">—</div></div>
+          <div class="wtags" id="wdc-tags"></div>
+        </div>
+      </div>
+
+      <div id="mbox" class="glass">
+        <div id="mbox-in">
+          <span class="mico">🍀</span>
+          <div class="mpre">✦ &nbsp; Wunsch verwahrt &nbsp; ✦</div>
+          <div class="mtitle" id="mt">Ein Wunsch wurde gehört</div>
+          <div class="mdiv"></div>
+          <div class="mwell" id="mw">—</div>
+          <div class="mcure" id="mc">—</div>
+          <div class="mdesc" id="md">—</div>
+          <button class="mbtn c" onclick="resetRitual()">Neuen Wunsch senden &nbsp;✦</button>
+        </div>
+      </div>
+
+      <div id="instr" class="glass c" onclick="startFlip()">
+        <div class="im">Wirf eine Münze in den heiligen Brunnen</div>
+        <div class="ih">
+          <span class="iht">Wische hoch</span>
+          <span class="isep">·</span>
+          <kbd>SPACE</kbd>
+          <span class="isep">·</span>
+          <span class="iht">Hier klicken</span>
+        </div>
+      </div>
+    </div>
+    <div class="pane-lbl" style="right:16px;left:auto;text-align:right;">✦ &nbsp;SHINE WISHING WELL</div>
+  </div>
+</div>
+
+<script>
+// ─── WELL DATA ────────────────────────────────────────────────────────────────
+const WELLS=[
+  {name:"St. Cooey's Well",location:"Portaferry, County Down",description:"Based on a 7th-century monastic site, restored by the local community in the 1970s. Has a thorn tree where ribbons are tied. Three stations: Wash, Eyes, Drink.",cure:"Healing of the eyes and inner ailments through drinking the sacred water.",offerings:"Ribbons on thorn tree; stones left at a stone table.",tags:["eyes","thorn tree","votives","County Down"],county:"Down"},
+  {name:"Father Germaine's / Saint Boden's Well",location:"Lackan, County Wicklow",description:"Rededicated to Our Lady of Mount Carmel in 1902. Submerged under the Pollaphuca Reservoir in the 1940s. Visible again when water levels lower dramatically.",cure:"Cures lameness, weak legs, and limps. Stones said to cure toothaches.",offerings:"Formerly rosary beads, medals, cloth. Healed pilgrims left crutches and walking sticks.",tags:["Wicklow","lameness","submerged","votive"],county:"Wicklow"},
+  {name:"St. Michael's Well",location:"Kilmihil, County Clare",description:"Encased with concrete, iron fence surrounding the pool. Glass-encased statue of Christ atop the pump house. Near the partially ruined church of St. Michael.",cure:"Famous for curing gout through drinking the water.",offerings:"After ritual: a pin, button, or piece of cloth left at the well.",tags:["Clare","gout","ritual","iron fence"],county:"Clare"},
+  {name:"St. Mary Magdalen's Well",location:"Kilbane, Limerick City",description:"A wooded path off a roundabout leads to a small well in a stone canopy. Statue depicts the Virgin Mary. Cleared space used for prayers.",cure:"Said to cure stomach issues and digestive ailments.",offerings:"Flowers and candles deposited near the statue.",tags:["Limerick","stomach","candles","woodland"],county:"Limerick"},
+  {name:"St. Colmcille's Well",location:"Newtown (Leixlip), Co. Kildare",description:"Situated in a big field called 'Sileacain', subsequently flooded. Lies near the bottom of a short east-facing valley slope, now overgrown with briars and thorns.",cure:"Sore eyes and facial ailments healed through prayer and washing.",offerings:"Tying a scapular, medal or rag to a nearby tree.",tags:["Colmcille","Kildare","rag","sore eyes"],county:"Kildare"},
+  {name:"Lady's Well",location:"Cowanstown, Co. Kildare",description:"Deep circular stone-lined well in a graveyard, with steps leading to the water. Enclosed by a modern wall with a piered gate. Restored in 1989.",cure:"Cure ascribed for ear ailments.",offerings:"Pilgrimage offerings on the Feast of the Assumption.",tags:["Assumption Day","ears","Kildare","Lady","Mary"],county:"Kildare"},
+  {name:"Well of the Seven Daughters",location:"Aillebrack, Galway",description:"Situated in a valley in a field called 'Pairc Geal' near Doon Hill. White-thorn bush growing beside. Water said to 'boil up' when a request is granted.",cure:"Headaches, sore eyes, sore hands — healed through prayer and votive offerings.",offerings:"Coins, medals, statues, buttons, hair pins, crosses, flowers, pieces of cloth tied on bush.",tags:["Galway","headache","Seven Sisters","sore eyes","rag"],county:"Galway"},
+  {name:"Our Lady's Well",location:"Kilfinane Townland, County Limerick",description:"Located in a large field, surrounded by a small metal fence. Through the gate there are steps down into a shallow elongated pool.",cure:"Sore eyes and curing blindness.",offerings:"Pilgrims hang pieces of cloth to a rag tree over the well.",tags:["Limerick","eyes","rag tree","blindness"],county:"Limerick"},
+  {name:"Tobar Mharie — St. Mary's Well",location:"Mullary, County Louth",description:"South of Dunleer near a ruined church and hilltop graveyard. The well sits at the bottom of a hill below an ash tree near a stream, in a cattle field.",cure:"Healing through prayer and votive candles on the ash tree.",offerings:"Votive candles left on the ash tree, evidenced by scorch marks on the bark.",tags:["ash","candles","Louth","St. Mary"],county:"Louth"},
+  {name:"Saint Brendan's Well",location:"Valentia Island, Kerry",description:"Near the coast in a boggy field. At the end of a rough road near a very old cemetery. Associated with St. Brendan the Navigator.",cure:"In the 5th century, St. Brendan anointed 2 dying pagans at this spring — a place of conversion and healing.",offerings:"Coins, crosses, laminated prayers, rosary, statuettes, white quartz rocks. Pilgrims sometimes leave shoes.",tags:["Kerry","sailors","travelers","coast","Brendan"],county:"Kerry"},
+  {name:"St. Brigid's Well",location:"Kilbreedy, County Limerick",description:"A clear spring surrounded by a stone wall. Statue of St. Brigid stands over the well. Small tree carries many rags beside it.",cure:"Effective in curing eye diseases. Must wash eyes with well water and pray.",offerings:"Rag tree beside the well. Circumnavigate nine times on 1st February.",tags:["Brigid","eyes","Limerick","rag","February"],county:"Limerick"},
+  {name:"St. Manchan's Holy Well",location:"Lemanaghan, County Offaly",description:"Along the Togher, beside Lemanaghan Church. Small stone wall, large bullaun stone, multiple trees with clooties. A misshapen ash with rosaries and rags.",cure:"Said to cure nearly every ailment — especially neuralgia, cancer, and warts. Apply water to afflicted part and walk three times around.",offerings:"Bottom of well littered with coins. On the ash tree: rosaries, rags, stuffed animals, pictures of loved ones.",tags:["bullaun","cancer","clootie","neuralgia","Offaly","warts"],county:"Offaly"},
+  {name:"St. Ciaran's Holy Well",location:"Clonmacnoise, County Offaly",description:"In the middle of a gravel patch, with a tree, stone cross-slab, and stone crucifix. Stone-lined with steps leading down. The Long Station done barefoot on September 9th.",cure:"Brought back an old woman's strength. Cured a stomach ache. Barefoot pilgrimage heals the spirit.",offerings:"Prayer, barefoot walking, circumambulation.",tags:["long station","Offaly","stomach","tree","barefoot"],county:"Offaly"},
+  {name:"Ballywully Well — Saint Nechtan",location:"Ballywully, Derry",description:"The well is actually a Bullaun stone underneath a tree with many clooties tied to it.",cure:"Cures warts: dip a rag in well water, wash the skin, tie rag (clootie) to tree. As the rag decays, so does the wart.",offerings:"Clootie rags tied to tree branches.",tags:["bullaun","clooties","rag","St. Nechtan","warts"],county:"Derry"},
+  {name:"St. Brigid's Well",location:"Morette, Emo, Laois",description:"Devotional statue of the Virgin Mary in a small whitewashed enclosure. To the left: a single Bullaun Stone with a shallow elongated channel. Located on private land.",cure:"Healing through devotion and prayer at the Bullaun.",offerings:"Private devotion.",tags:["Brigid","Laois","bullaun"],county:"Laois"},
+  {name:"Tobareendowney — King of Sunday",location:"Rathwilladoon, Galway",description:"Right off the road — climb cattle fences to find this walled compound containing 2 wells and an altar. One well flows into another but goes dry in summer.",cure:"A small house/altar for 'sick persons'. Smooth stones resembling eggs recall an ancient fertility cult.",offerings:"Garland Sunday in late July. Penitents descend barefoot.",tags:["Galway","fertility","barefoot","King of Sunday"],county:"Galway"},
+  {name:"St. Finnian's Well",location:"Valentia Island, Kerry",description:"Coastal well with a detailed inscription stone. Site associated with St. Finnian. A place of quiet maritime pilgrimage.",cure:"Healing of the spirit through connection with the sea and the saint.",offerings:"Prayer and quiet contemplation near the shore.",tags:["Kerry","coast","inscription","maritime"],county:"Kerry"},
+  {name:"Blakemount Holy Well",location:"Crusheen, Clare",description:"Located across from the stately home Blakemount. The well lies in a field with a 'Beware of Bull' sign. A remote and quietly atmospheric site.",cure:"General spiritual healing and blessing.",offerings:"Quiet prayer.",tags:["Clare","rural","remote"],county:"Clare"},
+  {name:"Our King of Sundays Well",location:"Kilfinane, County Limerick",description:"Close to Our Lady's Well. One of two wells listed together near the town of Kilfinane. The pair forms a small local pilgrimage route.",cure:"Spiritual renewal and local blessing.",offerings:"Pilgrimage during the feast days.",tags:["Limerick","Sunday","paired well"],county:"Limerick"},
+  {name:"St. Cooey's Well — Second Station",location:"Portaferry, County Down",description:"The second station at the restored 7th-century monastic site. Pilgrims move between stations: Wash → Eyes → Drink — a full ritual of the body and spirit.",cure:"Washing eyes with the well water. Drinking believed to heal inner ailments.",offerings:"White quartz stones and ribbons left at the stations.",tags:["eyes","wash","drink","County Down","coast"],county:"Down"}
+];
+
+let wellIndex=0,state="READY";
+let scene,camera,renderer,clock;
+let coin,wellGroup,guardian,koboldParts={};
+let starFields=[];
+let camPos=new THREE.Vector3(0,60,120);
+let camTarget=new THREE.Vector3(0,30,0);
+let coinPhys={pos:new THREE.Vector3(0,38,55),vel:new THREE.Vector3(0,0,0)};
+const C={gravity:-0.013,flipY:0.72,flipZ:-0.42,pipeSpeed:0.9,wellY:30,potY:-70,pipeR:5};
+
+function init(){
+  const wrap=document.getElementById('wc');
+  scene=new THREE.Scene();
+  scene.background=new THREE.Color(0x020308);
+  scene.fog=new THREE.FogExp2(0x020308,0.0011);
+  const iW=wrap.clientWidth||window.innerWidth,iH=wrap.clientHeight||window.innerHeight;
+  camera=new THREE.PerspectiveCamera(54,iW/iH,0.1,3000);
+  renderer=new THREE.WebGLRenderer({antialias:true});
+  renderer.setSize(wrap.clientWidth||window.innerWidth,wrap.clientHeight||window.innerHeight);
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.shadowMap.enabled=true;
+  renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  renderer.toneMapping=THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure=1.15;
+  wrap.appendChild(renderer.domElement);
+  window.__threeRenderer=renderer;
+  window.__threeCamera=camera;
+  clock=new THREE.Clock();
+
+  scene.add(new THREE.AmbientLight(0x0f1535,3.5));
+  const moon=new THREE.DirectionalLight(0xbbd4ff,1.4);
+  moon.position.set(80,200,120);moon.castShadow=true;
+  moon.shadow.mapSize.width=moon.shadow.mapSize.height=1024;
+  scene.add(moon);
+  const wg=new THREE.PointLight(0x00e5ff,4.5,120);wg.position.set(0,C.wellY+12,0);scene.add(wg);
+  const pg=new THREE.PointLight(0x9b59ff,2.8,90);pg.position.set(-30,C.wellY-10,15);scene.add(pg);
+  const gg=new THREE.PointLight(0xd4af37,2,70);gg.position.set(25,C.wellY+8,15);scene.add(gg);
+
+  buildCosmos();buildGround();buildWell();buildKobold();buildCoin();animate();
+}
+
+function buildCosmos(){
+  const pal=[0xffffff,0xaad4ff,0x00e5ff,0x9b59ff,0xd4af37];
+  for(let l=0;l<4;l++){
+    const n=3500,pos=new Float32Array(n*3);
+    for(let i=0;i<n;i++){pos[i*3]=(Math.random()-.5)*3000;pos[i*3+1]=(Math.random()-.5)*3000;pos[i*3+2]=(Math.random()-.5)*3000;}
+    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));
+    const m=new THREE.PointsMaterial({size:0.8+l*0.5,color:pal[l%pal.length],transparent:true,opacity:0.22+l*0.08,sizeAttenuation:true});
+    const f=new THREE.Points(g,m);
+    f.userData.speed=0.00004+l*0.00008;
+    f.userData.axis=new THREE.Vector3(Math.random()-.5,Math.random()-.5,Math.random()-.5).normalize();
+    starFields.push(f);scene.add(f);
+  }
+  [[0x00e5ff,220,1.5],[0x9b59ff,320,2.5],[0xd4af37,400,1]].forEach(([c,r,t],i)=>{
+    const ring=new THREE.Mesh(new THREE.TorusGeometry(r,t,12,300),
+      new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:0.022}));
+    ring.rotation.x=Math.random()*Math.PI;ring.rotation.y=Math.random()*Math.PI;scene.add(ring);
+  });
+}
+
+function buildGround(){
+  const gnd=new THREE.Mesh(new THREE.CircleGeometry(150,80),
+    new THREE.MeshStandardMaterial({color:0x04100a,roughness:1,metalness:0}));
+  gnd.rotation.x=-Math.PI/2;gnd.position.y=C.wellY-18;gnd.receiveShadow=true;scene.add(gnd);
+  for(let i=0;i<22;i++){
+    const a=Math.random()*Math.PI*2,r=18+Math.random()*45;
+    const p=new THREE.Mesh(new THREE.CircleGeometry(1.5+Math.random()*4,7),
+      new THREE.MeshStandardMaterial({color:Math.random()>.5?0x0e2a12:0x07200a,roughness:1}));
+    p.rotation.x=-Math.PI/2;p.position.set(Math.cos(a)*r,C.wellY-17.8,Math.sin(a)*r);scene.add(p);
+  }
+  for(let i=0;i<9;i++){
+    const s=new THREE.Mesh(new THREE.CylinderGeometry(1.2+Math.random()*.8,1.4+Math.random()*.8,.3,6),
+      new THREE.MeshStandardMaterial({color:0x1a2a1a,roughness:.95}));
+    s.position.set(0,C.wellY-17.7,22+i*8);s.rotation.y=Math.random()*Math.PI;s.receiveShadow=true;scene.add(s);
+  }
+}
+
+function buildWell(){
+  wellGroup=new THREE.Group();
+  const sm=new THREE.MeshStandardMaterial({color:0x1d2b1d,roughness:.9,metalness:.05});
+  const ds=new THREE.MeshStandardMaterial({color:0x0d180d,roughness:.95});
+  const ms=new THREE.MeshStandardMaterial({color:0x152215,roughness:.98});
+
+  const body=new THREE.Mesh(new THREE.CylinderGeometry(14.5,16.5,22,32),sm);
+  body.castShadow=true;body.receiveShadow=true;wellGroup.add(body);
+
+  // Layered stone bands
+  for(let i=0;i<10;i++){
+    const band=new THREE.Mesh(new THREE.TorusGeometry(15.8-i*.1,.4,4,32),i%3===0?ms:(i%2===0?sm:ds));
+    band.rotation.x=Math.PI/2;band.position.y=-9+i*2.4;wellGroup.add(band);
+  }
+
+  // Glowing cyan rim
+  const rim=new THREE.Mesh(new THREE.TorusGeometry(14.8,1.5,20,120),
+    new THREE.MeshBasicMaterial({color:0x00e5ff}));
+  rim.rotation.x=Math.PI/2;rim.position.y=11;wellGroup.add(rim);wellGroup.userData.rim=rim;
+
+  const rimIn=new THREE.Mesh(new THREE.TorusGeometry(13.2,.5,10,80),
+    new THREE.MeshBasicMaterial({color:0xaaffff,transparent:true,opacity:.5}));
+  rimIn.rotation.x=Math.PI/2;rimIn.position.y=10.2;wellGroup.add(rimIn);
+
+  // Water portal
+  const water=new THREE.Mesh(new THREE.CircleGeometry(13.4,80),
+    new THREE.MeshStandardMaterial({color:0x00ffee,emissive:0x00ddcc,emissiveIntensity:2.5,transparent:true,opacity:.82,roughness:0,metalness:.75}));
+  water.rotation.x=-Math.PI/2;water.position.y=10;wellGroup.add(water);wellGroup.userData.water=water;
+
+  // Ripple rings
+  for(let r=0;r<4;r++){
+    const rp=new THREE.Mesh(new THREE.RingGeometry(r*3+1,r*3+2.2,64),
+      new THREE.MeshBasicMaterial({color:0x00ffcc,transparent:true,opacity:.3-r*.06,side:THREE.DoubleSide}));
+    rp.rotation.x=-Math.PI/2;rp.position.y=10.15;wellGroup.add(rp);wellGroup.userData['rp'+r]=rp;
+  }
+
+  // Wooden arch
+  const wm=new THREE.MeshStandardMaterial({color:0x3a1e08,roughness:.88});
+  const dm=new THREE.MeshStandardMaterial({color:0x250e00,roughness:.92});
+  for(let s of[-1,1]){
+    const post=new THREE.Mesh(new THREE.CylinderGeometry(.9,1.1,20,10),wm);
+    post.position.set(s*13,10,0);post.castShadow=true;wellGroup.add(post);
+    const cap=new THREE.Mesh(new THREE.CylinderGeometry(1.2,.9,1,8),dm);
+    cap.position.set(s*13,20.5,0);wellGroup.add(cap);
+  }
+  const beam=new THREE.Mesh(new THREE.CylinderGeometry(.8,.8,30,10),wm);
+  beam.rotation.z=Math.PI/2;beam.position.y=19.5;beam.castShadow=true;wellGroup.add(beam);
+
+  const rm=new THREE.MeshStandardMaterial({color:0x6a5030,roughness:.95});
+  const rope=new THREE.Mesh(new THREE.CylinderGeometry(.22,.22,14,6),rm);
+  rope.position.set(0,13,0);wellGroup.add(rope);wellGroup.userData.rope=rope;
+
+  const bucket=new THREE.Mesh(new THREE.CylinderGeometry(1.6,1.3,3,14),
+    new THREE.MeshStandardMaterial({color:0x3d2004,roughness:.85,metalness:.1}));
+  bucket.position.set(0,7.5,0);bucket.castShadow=true;wellGroup.add(bucket);wellGroup.userData.bucket=bucket;
+
+  const bb=new THREE.Mesh(new THREE.TorusGeometry(1.5,.15,6,14),
+    new THREE.MeshStandardMaterial({color:0x555500,roughness:.6,metalness:.6}));
+  bb.rotation.x=Math.PI/2;bb.position.set(0,8.2,0);wellGroup.add(bb);
+
+  // Clootie rags (7 colours — Irish healing tradition)
+  const ragPal=[0xcc2222,0xff8800,0x22bb55,0x8855ff,0xff66aa,0xffdd00,0x2288cc];
+  for(let i=0;i<7;i++){
+    const rag=new THREE.Mesh(new THREE.PlaneGeometry(1.8+Math.random()*.8,.7+Math.random()*.5),
+      new THREE.MeshStandardMaterial({color:ragPal[i],side:THREE.DoubleSide,transparent:true,opacity:.82+Math.random()*.15}));
+    const px=i<4?-13:13;
+    rag.position.set(px+(Math.random()-.5)*.8,6+i*1.8,.6+Math.random()*.4);
+    rag.rotation.z=(Math.random()-.5)*.5;rag.rotation.y=(Math.random()-.5)*.6;
+    wellGroup.add(rag);wellGroup.userData['rag'+i]=rag;
+    rag.userData._bz=rag.position.z;rag.userData._brz=rag.rotation.z;
+  }
+
+  // Rune rings
+  const rrm=new THREE.MeshBasicMaterial({color:0x9b59ff,transparent:true,opacity:.22,side:THREE.DoubleSide});
+  const rr=new THREE.Mesh(new THREE.RingGeometry(18,19.5,48),rrm);
+  rr.rotation.x=-Math.PI/2;wellGroup.add(rr);wellGroup.userData.rr=rr;
+  const rr2=new THREE.Mesh(new THREE.RingGeometry(20.5,21.5,48),
+    new THREE.MeshBasicMaterial({color:0x00e5ff,transparent:true,opacity:.12,side:THREE.DoubleSide}));
+  rr2.rotation.x=-Math.PI/2;wellGroup.add(rr2);wellGroup.userData.rr2=rr2;
+
+  // Magic pipe beneath
+  const pipe=new THREE.Mesh(new THREE.CylinderGeometry(C.pipeR,C.pipeR,140,32,1,true),
+    new THREE.MeshStandardMaterial({color:0x9b59ff,transparent:true,opacity:.1,wireframe:true}));
+  pipe.position.y=-70;wellGroup.add(pipe);
+
+  wellGroup.position.y=C.wellY;scene.add(wellGroup);
+}
+
+function buildKobold(){
+  guardian=new THREE.Group();
+  const kp=koboldParts;
+  const skin=new THREE.MeshStandardMaterial({color:0xd4a870,roughness:.65});
+  const gn=new THREE.MeshStandardMaterial({color:0x2a7428,roughness:.75});
+  const dgn=new THREE.MeshStandardMaterial({color:0x163d14,roughness:.88});
+  const lgn=new THREE.MeshStandardMaterial({color:0x3a9438,roughness:.7});
+  const gold=new THREE.MeshStandardMaterial({color:0xffd700,roughness:.18,metalness:.92});
+  const aub=new THREE.MeshStandardMaterial({color:0xc85200,roughness:.8});
+  const dbr=new THREE.MeshStandardMaterial({color:0x2a1200,roughness:.9});
+  const wht=new THREE.MeshBasicMaterial({color:0xfff5e0});
+  const eyeG=new THREE.MeshBasicMaterial({color:0x00ff66});
+  const eyeB=new THREE.MeshBasicMaterial({color:0x040404});
+
+  // TORSO — green coat
+  const torso=new THREE.Mesh(new THREE.CylinderGeometry(1.25,2.2,5.2,16),gn);
+  torso.castShadow=true;guardian.add(torso);
+  const lining=new THREE.Mesh(new THREE.BoxGeometry(1.0,4.5,.25),lgn);
+  lining.position.set(0,.2,1.7);guardian.add(lining);
+  for(let s of[-1,1]){
+    const lapel=new THREE.Mesh(new THREE.BoxGeometry(.7,3.2,.45),dgn);
+    lapel.position.set(s*.85,.4,1.25);lapel.rotation.z=s*.18;guardian.add(lapel);
+    const tail=new THREE.Mesh(new THREE.BoxGeometry(.8,1.6,.35),dgn);
+    tail.position.set(s*1.1,-3.2,-.9);tail.rotation.z=s*.1;guardian.add(tail);
+  }
+  // Belt + buckle
+  const belt=new THREE.Mesh(new THREE.CylinderGeometry(2.25,2.25,.65,16),
+    new THREE.MeshStandardMaterial({color:0x3a1a00,roughness:.85}));
+  belt.position.y=-1.3;guardian.add(belt);
+  const bk=new THREE.Mesh(new THREE.BoxGeometry(1.1,.8,.4),gold);
+  bk.position.set(0,-1.3,2.25);guardian.add(bk);
+  const bkc=new THREE.Mesh(new THREE.BoxGeometry(.7,.45,.42),new THREE.MeshBasicMaterial({color:0x3a1a00}));
+  bkc.position.set(0,-1.3,2.26);guardian.add(bkc);
+  // Buttons
+  for(let i=0;i<5;i++){const b=new THREE.Mesh(new THREE.SphereGeometry(.17,8,8),gold);b.position.set(.05,1.6-i*.72,1.9);guardian.add(b);}
+  // Pants + shoes
+  const pm=new THREE.MeshStandardMaterial({color:0x1a2e0a,roughness:.92});
+  for(let s of[-1,1]){
+    const pant=new THREE.Mesh(new THREE.CylinderGeometry(.55,.48,2.8,10),pm);
+    pant.position.set(s*.88,-4.1,0);guardian.add(pant);
+    const shoe=new THREE.Mesh(new THREE.SphereGeometry(.7,10,7),dbr);
+    shoe.scale.set(1.3,.65,2.0);shoe.position.set(s*.88,-5.55,.45);shoe.castShadow=true;guardian.add(shoe);
+    const toecap=new THREE.Mesh(new THREE.SphereGeometry(.4,8,6),dbr);
+    toecap.scale.set(.9,.5,.9);toecap.position.set(s*.88,-5.45,1.3);guardian.add(toecap);
+    const sbk=new THREE.Mesh(new THREE.BoxGeometry(.45,.32,.22),gold);
+    sbk.position.set(s*.88,-5.2,1.15);guardian.add(sbk);
+  }
+
+  // HEAD GROUP
+  kp.hg=new THREE.Group();kp.hg.position.y=4.4;
+  const head=new THREE.Mesh(new THREE.SphereGeometry(1.55,22,22),skin);
+  head.scale.set(1,1,.92);head.castShadow=true;kp.hg.add(head);
+  // Cheeks
+  for(let s of[-1,1]){
+    const ck=new THREE.Mesh(new THREE.SphereGeometry(.42,8,8),new THREE.MeshBasicMaterial({color:0xff6655,transparent:true,opacity:.32}));
+    ck.position.set(s*1.05,-.18,1.2);kp.hg.add(ck);
+  }
+  // Nose + nostrils
+  const nose=new THREE.Mesh(new THREE.SphereGeometry(.3,10,10),skin);
+  nose.scale.set(1.3,.95,.85);nose.position.set(0,-.05,1.48);kp.hg.add(nose);
+  for(let s of[-1,1]){
+    const ns=new THREE.Mesh(new THREE.SphereGeometry(.08,6,6),new THREE.MeshBasicMaterial({color:0xb88050}));
+    ns.position.set(s*.12,-.14,1.56);kp.hg.add(ns);
+  }
+  // Eyes (white + iris + pupil + shine)
+  for(let s of[-1,1]){
+    const ew=new THREE.Mesh(new THREE.SphereGeometry(.24,12,12),wht);ew.scale.set(.95,.82,.72);ew.position.set(s*.57,.27,1.34);kp.hg.add(ew);
+    const iris=new THREE.Mesh(new THREE.SphereGeometry(.15,8,8),eyeG);iris.position.set(s*.57,.27,1.45);kp.hg.add(iris);
+    const pupil=new THREE.Mesh(new THREE.SphereGeometry(.08,6,6),eyeB);pupil.position.set(s*.57,.27,1.51);kp.hg.add(pupil);
+    const shine=new THREE.Mesh(new THREE.SphereGeometry(.04,5,5),new THREE.MeshBasicMaterial({color:0xffffff}));shine.position.set(s*.53,.32,1.54);kp.hg.add(shine);
+    const brow=new THREE.Mesh(new THREE.BoxGeometry(.38,.12,.15),aub);brow.position.set(s*.56,.56,1.38);brow.rotation.z=s*.18;kp.hg.add(brow);
+  }
+  // Laugh wrinkles
+  for(let s of[-1,1]){
+    const cr=new THREE.Mesh(new THREE.TorusGeometry(.24,.04,4,12,Math.PI*.55),new THREE.MeshBasicMaterial({color:0xa07040,transparent:true,opacity:.35}));
+    cr.position.set(s*.42,-.36,1.33);cr.rotation.z=s*.85;kp.hg.add(cr);
+  }
+  // Ears (elvish pointed)
+  for(let s of[-1,1]){
+    const eb=new THREE.Mesh(new THREE.SphereGeometry(.38,10,10),skin);eb.position.set(s*1.5,.1,.05);kp.hg.add(eb);
+    const et=new THREE.Mesh(new THREE.ConeGeometry(.22,1.0,7),skin);et.position.set(s*1.75,.65,.05);et.rotation.z=s>0?.55:-.55;kp.hg.add(et);
+    const ei=new THREE.Mesh(new THREE.SphereGeometry(.2,6,6),new THREE.MeshBasicMaterial({color:0xd09060,transparent:true,opacity:.5}));ei.position.set(s*1.5,.1,.22);kp.hg.add(ei);
+  }
+  // Moustache (two arched sweeping curves)
+  for(let s of[-1,1]){
+    const mu=new THREE.Mesh(new THREE.TorusGeometry(.32,.09,7,14,Math.PI*.72),
+      new THREE.MeshStandardMaterial({color:0xc84800,roughness:.8}));
+    mu.position.set(s*.3,-.3,1.38);mu.rotation.z=s>0?-.55:Math.PI+.55;kp.hg.add(mu);
+  }
+  // Beard — 6 flowing auburn strands
+  const bCols=[0xc84800,0xff6600,0xa83800,0xd45500,0xee7700,0xc84800];
+  for(let i=0;i<6;i++){
+    const st=new THREE.Mesh(new THREE.ConeGeometry(.17-i*.01,1.6+i*.22,7),
+      new THREE.MeshStandardMaterial({color:bCols[i],roughness:.82}));
+    st.position.set((i-2.5)*.29,-1.15,1.0+Math.abs(i-2.5)*.06);
+    st.rotation.x=.32+i*.04;st.rotation.z=(i-2.5)*.14;kp.hg.add(st);
+  }
+
+  // HAT GROUP
+  kp.hat=new THREE.Group();
+  const hbrim=new THREE.Mesh(new THREE.CylinderGeometry(2.3,2.3,.28,22),dgn);hbrim.position.y=1.35;kp.hat.add(hbrim);
+  const hcyl=new THREE.Mesh(new THREE.CylinderGeometry(1.15,1.35,2.6,22),dgn);hcyl.position.y=2.65;kp.hat.add(hcyl);
+  const hband=new THREE.Mesh(new THREE.CylinderGeometry(1.37,1.37,.38,22),
+    new THREE.MeshStandardMaterial({color:0x190a00,roughness:.92}));hband.position.y=1.72;kp.hat.add(hband);
+  const hbk=new THREE.Mesh(new THREE.BoxGeometry(.6,.5,.28),gold);hbk.position.set(0,1.74,1.38);kp.hat.add(hbk);
+  const hbkc=new THREE.Mesh(new THREE.BoxGeometry(.35,.28,.3),new THREE.MeshBasicMaterial({color:0x190a00}));hbkc.position.set(0,1.74,1.39);kp.hat.add(hbkc);
+  const htop=new THREE.Mesh(new THREE.CylinderGeometry(1.12,1.12,.15,22),dgn);htop.position.y=3.98;kp.hat.add(htop);
+  // Shamrock (3 leaves + stem)
+  const lm=new THREE.MeshBasicMaterial({color:0x00cc33});
+  for(let i=0;i<3;i++){
+    const ang=(i/3)*Math.PI*2+Math.PI/6;
+    const lf=new THREE.Mesh(new THREE.SphereGeometry(.22,8,8),lm);lf.scale.set(1,.7,1);lf.position.set(Math.cos(ang)*.27,4.05,Math.sin(ang)*.27+1.12);kp.hat.add(lf);
+    const rib=new THREE.Mesh(new THREE.CylinderGeometry(.02,.02,.22,4),new THREE.MeshBasicMaterial({color:0x008822}));
+    rib.position.set(Math.cos(ang)*.27,4.05,Math.sin(ang)*.27+1.12);rib.rotation.z=Math.PI/2;rib.rotation.y=ang;kp.hat.add(rib);
+  }
+  const stm=new THREE.Mesh(new THREE.CylinderGeometry(.05,.05,.35,5),new THREE.MeshBasicMaterial({color:0x007722}));
+  stm.position.set(0,3.78,1.12);kp.hat.add(stm);
+  kp.hg.add(kp.hat);
+  guardian.add(kp.hg);
+
+  // ARMS
+  for(let s of[-1,1]){
+    const arm=new THREE.Group();
+    arm.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(.4,.35,2.0,10),gn),{position:{y:-1.0}}));
+    arm.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(.32,.27,1.7,10),gn),{position:{y:-2.75}}));
+    const palm=new THREE.Mesh(new THREE.SphereGeometry(.35,10,10),skin);palm.scale.set(1,.7,.8);palm.position.y=-3.65;arm.add(palm);
+    for(let f=0;f<4;f++){const fi=new THREE.Mesh(new THREE.CylinderGeometry(.09,.07,.55,6),skin);fi.position.set(-.17+f*.115,-4.05,.05);arm.add(fi);}
+    const th=new THREE.Mesh(new THREE.CylinderGeometry(.1,.08,.48,6),skin);th.position.set(s>0?.35:-.35,-3.78,.15);th.rotation.z=s>0?-.85:.85;arm.add(th);
+    arm.position.set(s*2.1,1.5,0);arm.rotation.z=s*.5;guardian.add(arm);
+    kp[s>0?'rA':'lA']=arm;
+  }
+
+  // AURA RINGS
+  [[0x00ff88,.18],[0x00e5ff,.12],[0x9b59ff,.08]].forEach(([c,o],i)=>{
+    const au=new THREE.Mesh(new THREE.TorusGeometry(4.5+i,.06+i*.015,12,120),
+      new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:o}));
+    au.rotation.x=Math.PI/2+i*.35;guardian.add(au);kp['au'+i]=au;
+  });
+
+  // CLAY PIPE
+  kp.pipe=new THREE.Group();
+  const pm2=new THREE.MeshStandardMaterial({color:0x8b5e3c,roughness:.9});
+  const ps=new THREE.Mesh(new THREE.CylinderGeometry(.1,.08,1.3,7),pm2);ps.rotation.z=Math.PI/2;kp.pipe.add(ps);
+  const pb=new THREE.Mesh(new THREE.CylinderGeometry(.24,.2,.45,9),pm2);pb.position.set(.75,.22,0);kp.pipe.add(pb);
+  const po=new THREE.Mesh(new THREE.CylinderGeometry(.18,.18,.1,9),new THREE.MeshBasicMaterial({color:0x330000}));po.position.set(.75,.47,0);kp.pipe.add(po);
+  for(let s=0;s<3;s++){
+    const ws=new THREE.Mesh(new THREE.SphereGeometry(.1+s*.05,7,7),
+      new THREE.MeshBasicMaterial({color:0xeeeedd,transparent:true,opacity:.1}));
+    ws.position.set(.75+Math.sin(s)*.1,.6+s*.28,0);kp.pipe.add(ws);kp['ws'+s]=ws;
+  }
+  kp.pipe.position.set(-2.2,.1,1.1);guardian.add(kp.pipe);
+
+  guardian.position.set(28,C.wellY+5,6);scene.add(guardian);
+}
+
+function buildCoin(){
+  coin=new THREE.Group();
+  const cb=new THREE.Mesh(new THREE.CylinderGeometry(2.4,2.4,.55,40),
+    new THREE.MeshStandardMaterial({color:0xffd700,emissive:0xffaa00,emissiveIntensity:1.5,metalness:.95,roughness:.12}));
+  coin.add(cb);
+  const cr=new THREE.Mesh(new THREE.TorusGeometry(2.4,.2,8,40),
+    new THREE.MeshStandardMaterial({color:0xffee44,metalness:.9,roughness:.1}));
+  cr.rotation.x=Math.PI/2;coin.add(cr);
+  const ce=new THREE.Mesh(new THREE.TorusGeometry(1.6,.12,6,40),
+    new THREE.MeshBasicMaterial({color:0xffe066}));
+  ce.rotation.x=Math.PI/2;coin.add(ce);
+  coin.add(new THREE.PointLight(0xffd700,2.5,18));
+  coin.position.copy(coinPhys.pos);scene.add(coin);
+}
+
+function startFlip(){
+  if(state!=="READY")return;
+  state="FLIPPING";
+  coinPhys.vel.set(0,C.flipY,C.flipZ);
+  document.getElementById('instr').style.opacity='0';
+  document.getElementById('instr').style.pointerEvents='none';
+  document.getElementById('gstatus').textContent='Der Kobold beobachtet…';
+  const w=WELLS[wellIndex%WELLS.length];
+  document.getElementById('cwn').textContent=w.name;
+  document.getElementById('wcnt').textContent=`WELL ${(wellIndex%WELLS.length)+1} / ${WELLS.length}`;
+}
+
+function showWellData(){
+  const w=WELLS[wellIndex%WELLS.length];
+  document.getElementById('wdc-name').textContent=w.name;
+  document.getElementById('wdc-loc').textContent=w.location;
+  document.getElementById('wdc-cure').textContent=w.cure||'—';
+  document.getElementById('wdc-desc').textContent=w.description.length>130?w.description.substring(0,128)+'…':w.description;
+  document.getElementById('wdc-off').textContent=w.offerings||'—';
+  const tagsEl=document.getElementById('wdc-tags');tagsEl.innerHTML='';
+  (w.tags||[]).slice(0,6).forEach(t=>{const s=document.createElement('span');s.className='wtag';s.textContent=t;tagsEl.appendChild(s);});
+  document.getElementById('wdc').classList.add('show');
+  document.getElementById('mt').textContent='Ein Wunsch wurde gehört';
+  document.getElementById('mw').textContent=`${w.name} · ${w.location}`;
+  document.getElementById('mc').textContent=w.cure||'—';
+  document.getElementById('md').textContent=w.description.length>200?w.description.substring(0,198)+'…':w.description;
+  document.getElementById('mbox').classList.add('on');
+  document.getElementById('gstatus').textContent='✦ Wunsch verwahrt';
+}
+
+function resetRitual(){
+  document.getElementById('mbox').classList.remove('on');
+  document.getElementById('wdc').classList.remove('show');
+  document.getElementById('instr').style.opacity='1';
+  document.getElementById('instr').style.pointerEvents='auto';
+  document.getElementById('gstatus').textContent='Der Kobold wartet auf deinen Wunsch…';
+  document.getElementById('cwn').textContent='—';
+  coin.visible=true;coinPhys.pos.set(0,38,55);coinPhys.vel.set(0,0,0);
+  guardian.position.set(28,C.wellY+5,6);wellIndex++;state="READY";
+}
+
+function animate(){
+  requestAnimationFrame(animate);
+  const t=clock.getElapsedTime();
+  const kp=koboldParts;
+  starFields.forEach(f=>f.rotateOnAxis(f.userData.axis,f.userData.speed));
+
+  if(wellGroup){
+    const wd=wellGroup.userData;
+    if(wd.water)wd.water.material.emissiveIntensity=2.2+Math.sin(t*2.2)*.55;
+    for(let r=0;r<4;r++){const rp=wd['rp'+r];if(rp){rp.material.opacity=(0.28-r*.05)*(0.5+0.5*Math.sin(t*1.7-r*1.1));rp.scale.setScalar(1+.08*Math.sin(t*1.9-r*.9));}}
+    if(wd.bucket){wd.bucket.position.y=7.5+Math.sin(t*.75)*.65;wd.bucket.rotation.z=Math.sin(t*.5)*.04;}
+    if(wd.rr)wd.rr.rotation.z+=.002;
+    if(wd.rr2)wd.rr2.rotation.z-=.0015;
+    if(wd.rim)wd.rim.material.opacity=0.8+Math.sin(t*2.5)*.2;
+    for(let i=0;i<7;i++){const rg=wd['rag'+i];if(rg){rg.position.z=rg.userData._bz+Math.sin(t*1.5+i)*.14;rg.rotation.z=rg.userData._brz+Math.sin(t*.8+i*.5)*.06;}}
+  }
+
+  guardian.position.y=C.wellY+4.5+Math.sin(t*1.15)*1.3;
+  if(kp.hg){kp.hg.rotation.y=Math.sin(t*.38)*.24;kp.hg.rotation.x=Math.sin(t*.65)*.09;}
+  if(kp.hat)kp.hat.rotation.z=Math.sin(t*.82)*.04;
+  if(state==="READY"){
+    if(kp.lA){kp.lA.rotation.z=-.48+Math.sin(t*1.35)*.2;kp.lA.rotation.x=Math.sin(t*.82)*.1;}
+    if(kp.rA){kp.rA.rotation.z=.48-Math.sin(t*1.35)*.2;kp.rA.rotation.x=-Math.sin(t*.82)*.1;}
+  }else{
+    if(kp.lA)kp.lA.rotation.z=-1.15+Math.sin(t*3.5)*.25;
+    if(kp.rA)kp.rA.rotation.z=1.15-Math.sin(t*3.5)*.25;
+  }
+  for(let a=0;a<3;a++){if(kp['au'+a]){kp['au'+a].rotation.y+=.005+a*.002;kp['au'+a].rotation.z+=.002-a*.001;}}
+  for(let s=0;s<3;s++){const ws=kp['ws'+s];if(ws){ws.position.y=0.6+s*.28+Math.sin(t*1.8+s*1.1)*.12;ws.position.x=0.75+Math.sin(t*.9+s*.7)*.08;ws.material.opacity=.07+.1*Math.abs(Math.sin(t*.7+s));ws.scale.setScalar(1+.15*Math.sin(t*1.2+s));}}
+  guardian.lookAt(coin.position.x,guardian.position.y,coin.position.z);
+
+  if(state==="READY"){
+    const r=145;
+    camPos.lerp(new THREE.Vector3(Math.sin(t*.17)*r,68,Math.cos(t*.17)*r),.035);
+    camTarget.lerp(new THREE.Vector3(0,C.wellY+8,0),.04);
+    coin.position.y=38+Math.sin(t*2.6)*1.3;coin.rotation.z+=.045;coin.rotation.y+=.02;
+  }else if(state==="FLIPPING"){
+    coinPhys.vel.y+=C.gravity;coinPhys.pos.add(coinPhys.vel);
+    coin.position.copy(coinPhys.pos);coin.rotation.x+=.28;coin.rotation.z+=.12;
+    camPos.lerp(new THREE.Vector3(coin.position.x+40,coin.position.y+28,coin.position.z+60),.13);
+    camTarget.lerp(coin.position,.2);
+    if(coinPhys.vel.y<0&&coinPhys.pos.y<=C.wellY+10){
+      const dist=Math.sqrt(coinPhys.pos.x**2+coinPhys.pos.z**2);
+      if(dist<14){state="PIPELINE";coinPhys.pos.x=0;coinPhys.pos.z=0;document.getElementById('gstatus').textContent='◉ Verarbeitet…';}
+    }
+    if(coinPhys.pos.y<-220)resetRitual();
+  }else if(state==="PIPELINE"){
+    coin.position.y-=C.pipeSpeed;coin.rotation.z+=.95;coin.rotation.x+=.2;
+    camPos.lerp(new THREE.Vector3(22,coin.position.y+38,52),.18);
+    camTarget.lerp(new THREE.Vector3(0,coin.position.y-12,0),.18);
+    if(coin.position.y<=C.wellY+C.potY+5){state="LANDED";coin.visible=false;guardian.position.set(14,C.wellY+C.potY+12,0);showWellData();}
+  }else if(state==="LANDED"){
+    camPos.lerp(new THREE.Vector3(28,C.wellY+C.potY+26,44),.04);
+    camTarget.lerp(guardian.position,.04);
+  }
+  camera.position.copy(camPos);camera.lookAt(camTarget);renderer.render(scene,camera);
+}
+
+// RESIZE
+new ResizeObserver(()=>{
+  const w=document.getElementById('wc');
+  if(!w.clientWidth||!w.clientHeight)return;
+  camera.aspect=w.clientWidth/w.clientHeight;camera.updateProjectionMatrix();renderer.setSize(w.clientWidth,w.clientHeight);
+}).observe(document.getElementById('pW'));
+
+// DRAG DIVIDER
+(function(){
+  const wrap=document.getElementById('sw'),div=document.getElementById('dvd');
+  const L=document.getElementById('pA'),R=document.getElementById('pW');
+  let drag=false,sx=0,sL=1,sR=1;
+  div.addEventListener('mousedown',e=>{drag=true;sx=e.clientX;sL=parseFloat(getComputedStyle(L).flex)||1;sR=parseFloat(getComputedStyle(R).flex)||1;document.body.style.cursor='col-resize';document.body.style.userSelect='none';e.preventDefault();});
+  document.addEventListener('mousemove',e=>{if(!drag)return;const tot=wrap.clientWidth,dx=e.clientX-sx,tf=sL+sR,nL=Math.max(.25,Math.min(tf-.25,sL+(dx/tot)*tf));L.style.flex=nL;R.style.flex=tf-nL;});
+  document.addEventListener('mouseup',()=>{drag=false;document.body.style.cursor='';document.body.style.userSelect='';});
+})();
+
+// INPUT
+window.addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();startFlip();}});
+let ty0=0;
+const pW=document.getElementById('pW');
+pW.addEventListener('touchstart',e=>{ty0=e.touches[0].clientY;},{passive:true});
+pW.addEventListener('touchend',e=>{if(ty0-e.changedTouches[0].clientY>40)startFlip();});
+pW.addEventListener('wheel',e=>{if(e.deltaY<-30)startFlip();});
+window.addEventListener('load',init);
+</script>
+</body>
+</html>

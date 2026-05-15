@@ -1,18 +1,30 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import Link from "next/link";
+import { prisma } from "@/lib/prisma";
 
 export default async function JuniorSafetyPage() {
   const session = await auth();
   const user = session?.user as any;
 
-  if (!user || user.role !== "SUPER_ADMIN") redirect("/login");
+  if (!user || (user.role !== "SUPER_ADMIN" && user.role !== "TENANT_ADMIN")) redirect("/login");
+
+  const [juniorCount, parentCount, linkCount, transitionCount] = await Promise.all([
+    prisma.user.count({ where: { role: "JUNIOR" } }),
+    prisma.user.count({ where: { role: "PARENT" } }),
+    prisma.parentChildLink.count(),
+    prisma.juniorProfile.count({ where: { transitionStatus: "ACTIVE_JUNIOR" } }),
+  ]);
 
   return (
     <main className="min-h-screen bg-sacred px-6 py-12">
       <div className="max-w-5xl mx-auto">
 
         <header className="text-center mb-16">
-          <p className="font-ceremonial text-xs opacity-40 mb-2" style={{ letterSpacing: "3px" }}>
+          <Link href="/admin" className="font-ceremonial text-xs opacity-40 hover:opacity-70 transition-opacity" style={{ letterSpacing: "3px", textDecoration: "none" }}>
+            ← ADMIN TERMINAL
+          </Link>
+          <p className="font-ceremonial text-xs opacity-40 mb-2 mt-4" style={{ letterSpacing: "3px" }}>
             JUNIOR-SCHUTZ-ZENTRALE
           </p>
           <h1 className="font-ceremonial text-gold glow-gold" style={{ fontSize: "2rem" }}>
@@ -45,10 +57,10 @@ export default async function JuniorSafetyPage() {
         {/* METRICS */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
           {[
-            { label: "Aktive Juniors", value: "—", color: "#00bcd4" },
-            { label: "Eltern-Relays OK", value: "—", color: "#4caf7d" },
-            { label: "Transition ausstehend", value: "—", color: "#e67e22" },
-            { label: "Vakanz-Priorität", value: "—", color: "#7c3aed" },
+            { label: "Aktive Juniors", value: juniorCount, color: "#00bcd4" },
+            { label: "Eltern-Relays OK", value: linkCount, color: "#4caf7d" },
+            { label: "Transition ausstehend", value: transitionCount, color: "#e67e22" },
+            { label: "Eltern gesamt", value: parentCount, color: "#7c3aed" },
           ].map((m) => (
             <div key={m.label} className="metric-card text-center">
               <div className="font-ceremonial" style={{ fontSize: "2rem", color: m.color }}>{m.value}</div>

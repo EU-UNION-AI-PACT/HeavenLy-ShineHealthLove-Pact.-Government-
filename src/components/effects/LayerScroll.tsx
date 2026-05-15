@@ -15,6 +15,15 @@ interface Layer {
 
 const LAYERS: Layer[] = [
   {
+    id: "intro-origin",
+    eyebrow: "✦  HEILIGES JAHR 2026  ·  PILGER DER HOFFNUNG  ✦",
+    title: "GloryaShine\nder Pilger",
+    subtitle: "Ein Ort, an dem jede Stimme zählt. Jede Geschichte bewahrt wird. Und die Welt zum ersten Mal wirklich zuhört.",
+    cta: { label: "Den Pfad betreten", href: "/portal" },
+    accentColor: "#d4af37",
+    bg: "radial-gradient(ellipse at 50% 35%, rgba(212,175,55,0.18) 0%, transparent 55%), radial-gradient(ellipse at 20% 85%, rgba(212,175,55,0.06) 0%, transparent 50%), radial-gradient(ellipse at 80% 10%, rgba(0,188,212,0.07) 0%, transparent 45%), #06080e",
+  },
+  {
     id: "shinehealthcare-origin",
     eyebrow: "◈  SHINEHEALTHCARE — GLOBALE INFRASTRUKTUR",
     title: "Nie wieder\nvergessen",
@@ -44,8 +53,8 @@ const LAYERS: Layer[] = [
   {
     id: "guardian",
     eyebrow: "♦  ELTERN-PASSAGE — KINDERSCHUTZ",
-    title: "Das Kind\nim sicheren\nVakuum",
-    subtitle: "Im Einklang mit der UN-Kinderrechtskonvention gilt das Zwei-Schlüssel-Prinzip: Jede Systemkommunikation, die ein Kind betrifft, wird ausschließlich über den erziehungsberechtigten Elternteil geleitet. Kein externer Direktkontakt ist strukturell möglich.",
+    title: "Das Kind\nunter dem\nSchutzmantel",
+    subtitle: "Datenhoheit für Kinder bedeutet: Kein externes System berührt das Kind direkt. Jede Kommunikation, jede Bestätigung, jede Verbindung läuft ausschließlich über den erziehungsberechtigten Elternteil — technisch erzwungen, nicht nur als Richtlinie formuliert.",
     cta: { label: "Eltern-Portal öffnen", href: "/portal/guardian" },
     accentColor: "#e67e22",
     bg: "radial-gradient(ellipse at 50% 50%, rgba(230,126,34,0.1) 0%, transparent 65%), radial-gradient(ellipse at 80% 20%, rgba(212,175,55,0.05) 0%, transparent 50%), #0a0c10",
@@ -69,7 +78,7 @@ export default function LayerScroll({ onExit }: { onExit: () => void }) {
     LAYERS.map((_, i) => (i === 0 ? "active" : "hidden"))
   );
   const transitioning = useRef(false);
-  const DURATION = 1400;
+  const DURATION = 2800;
 
   const goTo = useCallback(
     (nextIdx: number) => {
@@ -106,7 +115,7 @@ export default function LayerScroll({ onExit }: { onExit: () => void }) {
           });
           return next;
         });
-      }, DURATION + 100);
+      }, DURATION + 400);
     },
     [currentIdx, onExit]
   );
@@ -124,8 +133,8 @@ export default function LayerScroll({ onExit }: { onExit: () => void }) {
     let lastWheel = 0;
     const onWheel = (e: WheelEvent) => {
       const now = Date.now();
-      if (now - lastWheel < DURATION + 300) return;
-      if (Math.abs(e.deltaY) < 30) return;
+      if (now - lastWheel < DURATION + 800) return;
+      if (Math.abs(e.deltaY) < 40) return;
       lastWheel = now;
       handleNav(e.deltaY > 0 ? "down" : "up");
     };
@@ -165,7 +174,7 @@ export default function LayerScroll({ onExit }: { onExit: () => void }) {
         position: "fixed",
         inset: 0,
         zIndex: 50,
-        perspective: "1400px",
+        perspective: "1600px",
         overflow: "hidden",
         background: "#0a0c10",
       }}
@@ -180,8 +189,8 @@ export default function LayerScroll({ onExit }: { onExit: () => void }) {
           state === "active"
             ? "translateZ(0) scale(1) translateY(0)"
             : state === "exit"
-            ? "translateY(-30%) rotateX(6deg) scale(0.94) opacity(0)"
-            : "translateZ(-120px) scale(0.96) translateY(25px)";
+            ? "translateY(-5%) scale(0.985)"
+            : "translateZ(-20px) scale(0.995) translateY(5px)";
 
         return (
           <div
@@ -196,12 +205,14 @@ export default function LayerScroll({ onExit }: { onExit: () => void }) {
               padding: "2rem",
               textAlign: "center",
               background: layer.bg,
-              opacity: state === "active" ? 1 : 0,
-              visibility: state === "active" || state === "exit" ? "visible" : "hidden",
+              opacity: state === "active" ? 1 : state === "exit" ? 0.5 : 0,
+              visibility: state === "hidden" ? "hidden" : "visible",
               transform,
-              transition: `transform ${DURATION}ms cubic-bezier(0.16,1,0.3,1), opacity ${DURATION * 0.85}ms cubic-bezier(0.16,1,0.3,1)`,
+              transition: `transform ${DURATION}ms cubic-bezier(0.16,1,0.3,1), opacity ${DURATION * 1.2}ms cubic-bezier(0.33,1,0.68,1)`,
+              transitionDelay: state === "active" ? "0ms" : "0ms",
               willChange: "transform, opacity",
               zIndex: state === "active" ? 10 : state === "exit" ? 5 : 1,
+              isolation: "isolate",
             }}
           >
             {/* decorative corner lines */}
@@ -229,14 +240,30 @@ export default function LayerScroll({ onExit }: { onExit: () => void }) {
               {layer.eyebrow}
             </p>
 
+            {/* Intro-Orb: dekorativer Goldring tief im Hintergrund — kein Overlap */}
+            {i === 0 && (
+              <div style={{
+                position: "absolute",
+                top: "50%", left: "50%",
+                transform: "translate(-50%, -56%)",
+                width: "min(70vw, 460px)", height: "min(70vw, 460px)",
+                borderRadius: "50%",
+                border: "1px solid rgba(212,175,55,0.08)",
+                boxShadow: "0 0 100px rgba(212,175,55,0.06), inset 0 0 60px rgba(212,175,55,0.03)",
+                animation: "pulseOrb 6s ease-in-out infinite",
+                pointerEvents: "none",
+                zIndex: -1,
+              }} />
+            )}
+
             {/* title */}
             <h2
               style={{
                 fontFamily: "var(--font-ceremonial)",
-                fontSize: "clamp(2.2rem, 7vw, 5.5rem)",
-                letterSpacing: "0.08em",
+                fontSize: i === 0 ? "clamp(3rem, 10vw, 7.5rem)" : "clamp(2.2rem, 7vw, 5.5rem)",
+                letterSpacing: i === 0 ? "0.15em" : "0.08em",
                 textTransform: "uppercase",
-                lineHeight: 1.05,
+                lineHeight: i === 0 ? 1.0 : 1.05,
                 marginBottom: "1.75rem",
                 background: `linear-gradient(120deg, ${accent}, #f9f1d7 50%, ${accent})`,
                 backgroundSize: "200% auto",
@@ -251,15 +278,26 @@ export default function LayerScroll({ onExit }: { onExit: () => void }) {
               ))}
             </h2>
 
+            {/* Jahreszahl nur auf Layer 0 */}
+            {i === 0 && (
+              <p style={{
+                fontFamily: "var(--font-ceremonial)",
+                fontSize: "0.5rem",
+                letterSpacing: "0.6em",
+                color: "rgba(212,175,55,0.35)",
+                marginBottom: "1.5rem",
+              }}>2026</p>
+            )}
+
             {/* subtitle */}
             <p
               style={{
                 fontFamily: "var(--font-quote)",
-                fontSize: "clamp(0.95rem, 2vw, 1.3rem)",
+                fontSize: i === 0 ? "clamp(1rem, 2.2vw, 1.35rem)" : "clamp(0.95rem, 2vw, 1.3rem)",
                 fontStyle: "italic",
-                color: "rgba(249,241,215,0.6)",
-                maxWidth: "600px",
-                lineHeight: 1.65,
+                color: i === 0 ? "rgba(249,241,215,0.55)" : "rgba(249,241,215,0.6)",
+                maxWidth: i === 0 ? "520px" : "600px",
+                lineHeight: 1.75,
                 marginBottom: "2.5rem",
               }}
             >
@@ -312,24 +350,29 @@ export default function LayerScroll({ onExit }: { onExit: () => void }) {
               <div
                 style={{
                   position: "absolute",
-                  bottom: "4.5rem",
+                  bottom: "3.5rem",
                   left: "50%",
                   transform: "translateX(-50%)",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
-                  gap: "0.4rem",
-                  animation: "gold-float 2.5s ease-in-out infinite",
+                  gap: "0.6rem",
+                  animation: "gold-float 3s ease-in-out infinite",
+                  zIndex: 1,
                 }}
               >
-                <span style={{ fontFamily: "var(--font-ceremonial)", fontSize: "0.45rem", letterSpacing: "3px", color: accent, opacity: 0.45 }}>
-                  SCROLLEN
+                <span style={{ fontFamily: "var(--font-ceremonial)", fontSize: "0.4rem", letterSpacing: "4px", color: accent, opacity: 0.35 }}>
+                  DEN PFAD ENTDECKEN
                 </span>
-                <div style={{
-                  width: "1px",
-                  height: "28px",
-                  background: `linear-gradient(to bottom, ${accent}80, transparent)`,
-                }} />
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "3px" }}>
+                  <div style={{ width: "1px", height: "32px", background: `linear-gradient(to bottom, ${accent}60, transparent)` }} />
+                  <div style={{
+                    width: "6px", height: "6px",
+                    borderRight: `1px solid ${accent}60`,
+                    borderBottom: `1px solid ${accent}60`,
+                    transform: "rotate(45deg) translateY(-2px)",
+                  }} />
+                </div>
               </div>
             )}
           </div>

@@ -162,6 +162,22 @@ export default async function PilgrimPortalPage() {
               Global News #001 — Das Mesh ist aktiv
             </p>
           </Link>
+
+          <Link href="/portal/wunschbrunnen" className="station-card text-center" style={{ borderTop: "2px solid #00e5ff" }}>
+            <div className="font-ceremonial mb-2" style={{ fontSize: "1.4rem", color: "#00e5ff" }}>🌊</div>
+            <div className="font-ceremonial" style={{ fontSize: "0.75rem", letterSpacing: "2px", color: "#00e5ff" }}>Wunschbrunnen</div>
+            <p className="mt-2 opacity-50" style={{ fontFamily: "var(--font-body)", fontSize: "0.85rem" }}>
+              650 Heilige Brunnen Irlands · Münze werfen · Wunsch vergolden
+            </p>
+          </Link>
+
+          <Link href="/portal/splitscreen" className="station-card text-center" style={{ borderTop: "2px solid #9b59ff" }}>
+            <div className="font-ceremonial mb-2" style={{ fontSize: "1.4rem", color: "#9b59ff" }}>⬡</div>
+            <div className="font-ceremonial" style={{ fontSize: "0.75rem", letterSpacing: "2px", color: "#9b59ff" }}>Splitscreen — Cosmic Atlas</div>
+            <p className="mt-2 opacity-50" style={{ fontFamily: "var(--font-body)", fontSize: "0.85rem" }}>
+              3D-Brunnen + Cosmic Artifact Atlas — nebeneinander
+            </p>
+          </Link>
         </div>
 
         {/* PASSAGE REMINDER */}
