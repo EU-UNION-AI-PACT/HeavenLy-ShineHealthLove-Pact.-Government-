@@ -3,22 +3,22 @@ import Link from "next/link";
 const NAME_LAYERS = [
   {
     word: "SHINE",
-    de: "Heilendes Licht",
-    body: "Das Licht, das in jedem Menschen bereits brennt — auch wenn es von Last, Schmerz oder Vergessen verdeckt ist. Shine bedeutet nicht Leistung oder Glanz nach außen. Es bedeutet: das Innere sichtbar machen. Einker und Auskunft geben — dem Eigenen, dem Höheren, dem Kollektiv.",
+    de: "Das innere Licht",
+    body: "Das Licht, das jedem Menschen innewohnt — auch dann, wenn es durch Last, Schmerz oder gesellschaftliche Unsichtbarkeit verdeckt wird. Shine bezeichnet nicht äußere Leistung oder Selbstdarstellung. Es bezeichnet die strukturell gesicherte Sichtbarmachung des Inneren: Rechenschaft gegenüber dem Eigenen, dem Höheren und dem Kollektiv.",
     color: "#d4af37",
     icon: "✦",
   },
   {
     word: "HEALTH",
-    de: "Heilung — ganzheitlich",
-    body: "Heilung bedeutet nicht: ein Wunsch wird sofort wahr. Heilung bedeutet manchmal harte, konsequente Arbeit. Medizinische Vorsorge und Nachsorge durch Ärzte ist unersetzlich — das System ersetzt keinen Arzt. Aber es kann den Boden bereiten: den Ballast der Seele entwurzeln, die innere Last benennen und dem Heilungsprozess eine positive Bekräftigung geben.",
+    de: "Heilung — ganzheitlich verstanden",
+    body: "Heilung vollzieht sich nicht durch Wunscherfüllung allein. Sie erfordert mitunter konsequente, ernsthafte Arbeit. Medizinische Vorsorge und Nachsorge durch Fachpersonal bleibt unersetzlich — dieses System tritt an keine Stelle der ärztlichen Versorgung. Es bereitet jedoch den Boden: Es benennt die innere Last, entwurzelt den seelischen Ballast und gibt dem Heilungsprozess eine fundierte, kollektive Bekräftigung.",
     color: "#4caf7d",
     icon: "◈",
   },
   {
     word: "CARE",
-    de: "Innere Pflege",
-    body: "Pflege ist nicht nur äußerlich. Care bedeutet: das Innere ernst nehmen. Den Wunsch, die Last, die Sehnsucht — zu einem Höheren überliefern. Im Kollektiv des gesamten Ichs: das Potenzial für Heilung in Erwägung ziehen. Nicht allein, sondern gemeinsam mit den Profis der Heilung — und dem kollektiven Bewusstsein einer Welt, die zuhört.",
+    de: "Strukturelle innere Pflege",
+    body: "Pflege ist nicht ausschließlich medizinischer Natur. Care bedeutet: das Innere des Menschen mit derselben Ernsthaftigkeit zu behandeln wie das Äußere. Wünsche, Lasten und Sehnsüchte werden dem Kollektiv anvertraut — nicht zur Auflösung, sondern zur gemeinsamen Bezeugung. Nicht allein, sondern in Gemeinschaft mit den Verantwortlichen der Heilung und dem kollektiven Bewusstsein einer Welt, die zuhört.",
     color: "#00bcd4",
     icon: "⬡",
   },
@@ -27,53 +27,53 @@ const NAME_LAYERS = [
 const FIVE_LAYERS = [
   {
     nr: "01",
-    title: "Die poetische Vision",
-    subtitle: "Das innere Licht",
-    body: "ShineHealthCare ist kein Verschönerungsprogramm. Es ist der Moment, in dem das Licht, das jeder Mensch bereits in sich trägt, endlich einen Ort bekommt — einen Raum, in dem es nicht länger übersehen werden kann. Wie ein Diamant, der erst gepresst werden muss, um zu leuchten.",
+    title: "Die ethische Vision",
+    subtitle: "Das innere Licht als strukturelles Recht",
+    body: "ShineHealthCare ist kein Verschönerungsprogramm und kein spirituelles Lifestyle-Angebot. Es ist eine rechtsverbindliche Infrastruktur, die dem Licht, das jedem Menschen innewohnt, einen dauerhaften institutionellen Raum schafft — einen Raum, in dem Unsichtbarkeit strukturell ausgeschlossen ist. Wie ein Diamant, der unter Druck erst seinen vollen Glanz entfaltet, so entfaltet das Innere des Menschen seine Bedeutung erst durch kollektive Bezeugung.",
     color: "#d4af37",
     icon: "✦",
   },
   {
     nr: "02",
-    title: "Die klare Erklärung",
+    title: "Die präzise Definition",
     subtitle: "Was ist ShineHealthCare?",
-    body: "Eine globale Erinnerungs-, Fürbitten- und Intentionsstruktur. Ein System, das verhindert, dass Menschlichkeit, Geschichten, Warnzeichen und gute Absichten wieder verloren gehen. Nicht Wunderheilung — sondern Care im Sinne des eigentlichen Lichts, das man in sich trägt.",
+    body: "Eine globale Erinnerungs-, Fürbitten- und Intentionsstruktur, verankert im Völkerrecht und im europäischen Datenschutzrahmen. Ein System, das es technologisch und rechtlich unmöglich macht, dass Menschlichkeit, Zeugnisse, Warnzeichen und gute Absichten erneut im Mist der Geschichte verschwinden. Keine Wunderheilung — sondern verantwortungsvolle Pflege im Sinne des Lichts, das der Mensch bereits in sich trägt.",
     color: "#00bcd4",
     icon: "◈",
   },
   {
     nr: "03",
     title: "Die symbolische Zeitachse",
-    subtitle: "Januar → Juni → Dezember",
-    body: "Der 6. Januar (Ursprung / Epiphanie) spiegelt sich im 12. Juni (Spiegelpunkt — genau die Hälfte des Weges) und vollendet sich am 24. Dezember (Krönung / Jubiläum). Das Heilige Jahr ist keine statische Feier — es ist eine lebendige Atembewegung, in der Hoffnung zu Heilung wird.",
+    subtitle: "6. Januar → 12. Juni → 24. Dezember",
+    body: "Der 6. Januar 2026 (Epiphanie / Julianischer Anker) markiert den Ursprung. Der 12. Juni 2026 bildet den Spiegelpunkt — exakt die Hälfte des Heiligen Jahres, an dem der Pfad der Hoffnung in den Pfad der Heilung übergeht. Der 24. Dezember 2026 vollendet den Bogen: Krönung, Jubiläum, Gewissheit. Das Heilige Jahr ist keine statische Feier — es ist eine lebendige Atembewegung der Geschichte.",
     color: "#4caf7d",
     icon: "⬡",
   },
   {
     nr: "04",
-    title: "Die gesellschaftliche Idee",
-    subtitle: "Kollektive Koralität",
-    body: "Jede Stimme zählt. Jede Geschichte enthält Bedeutung. Prävention entsteht durch Zuhören. Religionen, Kulturen und Menschen bekommen ein gemeinsames Sprachrohr — dogmenfrei, aber spirituell tief. KI und Technologie sollen nicht nur effizient sein, sondern erinnerungsfähig und empathisch.",
+    title: "Die gesellschaftliche Architektur",
+    subtitle: "Kollektive Koralität als Staatsprinzip",
+    body: "Jede Stimme trägt Bedeutung. Jede Geschichte enthält präventive Kraft. Prävention entsteht durch strukturiertes Zuhören, nicht durch nachträgliche Schadensbegrenzung. Religionen, Kulturen und Menschen erhalten ein gemeinsames, dogmenfreies Sprachrohr. Künstliche Intelligenz und Technologie werden verpflichtet, nicht nur effizient, sondern erinnerungsfähig, mehrsprachig und empathisch zu sein.",
     color: "#e67e22",
     icon: "◉",
   },
   {
     nr: "05",
-    title: "Die visuelle Ebene",
-    subtitle: "Gold, Licht, Pilger, Passage",
-    body: "Gold als Metapher für Sichtbarmachung. Licht als Ergebnis des Gehört-Werdens. Das Gießfass als alchemistischer Reaktor — das Alte wird begriffen und vergoldet. Der Pilger-Ring als Einheit: Der Fischersring, das Jubiläum und die Sovereign ID als eine einzige goldene Ebene.",
+    title: "Die symbolische Sprache",
+    subtitle: "Gold · Licht · Pilger · Passage",
+    body: "Gold als Metapher für die Sichtbarmachung des Verborgenen. Licht als unmittelbares Ergebnis des Gehört-Werdens. Das Gießfass als alchemistischer Reaktor — das Versäumte der Vergangenheit wird begriffen, transformiert und in kollektive Stärke verwandelt. Der Pilger-Ring als symbolische Einheit: der Fischersring des Heiligen Jahres, das Jubiläum der Menschheit und die Sovereign ID als eine einzige, unteilbare goldene Ebene.",
     color: "#7c3aed",
     icon: "⌘",
   },
 ];
 
 const CORE_PRINCIPLES = [
-  { principle: "Nie wieder vergessen", desc: "Jede gute Intention, jede Warnung, jede Geschichte bekommt einen festen Platz im kollektiven Gedächtnis.", icon: "🏛️" },
-  { principle: "Prävention vor Heilung", desc: "Das Gießfass fängt Versäumnis-Signale früh ein — bevor sie sich zu Leid verfestigen.", icon: "🛡️" },
-  { principle: "Jede Stimme zählt", desc: "Obdachlose, Pilger, Kinder, Senioren — alle sind Knotenpunkte im leuchtenden Graphen, keine Aktennummern.", icon: "✦" },
-  { principle: "Interreligiöse Konvergenz", desc: "Fürbitten aller Glaubensrichtungen fließen zusammen. Die Technik bewertet nicht den Glauben — nur die Menschlichkeit.", icon: "◈" },
-  { principle: "Ethische KI", desc: "Technologie als mehrsprachiges, multi-kulturelles Sprachrohr — nicht als Kontrollsystem, sondern als Verstärker kollektiver Relevanz.", icon: "⬡" },
-  { principle: "Generationen-Pakt", desc: "Von der Eltern-Passage bis zum Globalen Workspace — alle Generationen vereint im Schutz und in der Freiheit.", icon: "◉" },
+  { principle: "Nie wieder vergessen", desc: "Jede Intention, jede Warnung, jede Geschichte erhält einen dauerhaften, rechtlich gesicherten Platz im kollektiven Gedächtnis der Völkergemeinschaft.", icon: "🏛️" },
+  { principle: "Prävention vor Reaktion", desc: "Das Gießfass erfasst Versäumnis-Signale zu einem frühen Zeitpunkt — bevor sie sich zu individuellem oder kollektivem Leid verfestigen.", icon: "🛡️" },
+  { principle: "Jede Stimme ist gleichwertig", desc: "Obdachlose, Pilger, Kinder und Senioren sind keine Randfälle — sie sind unverzichtbare Knotenpunkte im kollektiven Entscheidungsgefüge der Allianz.", icon: "✦" },
+  { principle: "Interreligiöse Konvergenz", desc: "Fürbitten und Intentionen aller Glaubensrichtungen werden gemäß Artikel 18 der Allgemeinen Erklärung der Menschenrechte gleichwertig aufgenommen und bewahrt.", icon: "◈" },
+  { principle: "Ethische Künstliche Intelligenz", desc: "Technologie dient als kulturunabhängiges, mehrsprachiges Sprachrohr — als Verstärker kollektiver menschlicher Relevanz, niemals als Instrument der Überwachung oder Kontrolle.", icon: "⬡" },
+  { principle: "Generationenübergreifender Pakt", desc: "Von der Eltern-Passage bis zum Globalen Workspace — alle Generationen werden in einem einzigen, rechtlich verbindlichen Schutz- und Freiheitsgefüge vereint.", icon: "◉" },
 ];
 
 export default function ShineHealthCarePage() {
@@ -155,12 +155,12 @@ export default function ShineHealthCarePage() {
                 lineHeight: 1.95,
               }}
             >
-              ShineHealthCare ist kein Ersatz für ärztliche Vorsorge oder Nachsorge.
-              Es ist der <strong style={{ color: "#f9f1d7" }}>seelische Resonanzraum</strong> daneben:
-              Wünsche, Fürbitten und geteilte Lasten können den Ballast der Seele entwurzeln
-              — und so die Heilung positiv bekräftigen. Manchmal genügt es, Gedanken dem
-              Kollektiv zu übergeben, damit das Innere Raum bekommt, sich zu öffnen.
-              Das Kollektiv — der Held des gesamten Ichs — trägt mit.
+              ShineHealthCare ersetzt keine ärztliche Vorsorge oder Nachsorge.
+              Es ist der <strong style={{ color: "#f9f1d7" }}>strukturelle seelische Resonanzraum</strong> daneben:
+              Wünsche, Fürbitten und geteilte Lasten können den Ballast der Seele benennen und entwurzeln
+              — und dem medizinischen Heilungsprozess eine kollektive, fundierte Bekräftigung verleihen.
+              Die Übergabe eines Gedankens an das Kollektiv schafft inneren Raum.
+              Das Kollektiv — als Träger des gemeinsamen Bewusstseins — bezeugt und antwortet.
             </p>
           </div>
         </div>
@@ -295,18 +295,17 @@ export default function ShineHealthCarePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
                 <p style={{ fontFamily: "var(--font-body)", fontSize: "1.05rem", opacity: 0.75, lineHeight: 1.9 }}>
-                  Die KI war bisher oft „seelenlos", weil sie nur mit harten Daten gefüttert wurde.
-                  Dein Onboarding gibt der KI einen <strong style={{ color: "#00bcd4" }}>ethischen Kompass</strong>.
-                  Sie lernt, dass Relevanz nicht in der Masse liegt — sondern in der Wichtigkeit
-                  <em> jeder einzelnen</em> Geschichte.
+                  Systeme der Künstlichen Intelligenz wurden bisher überwiegend mit strukturierten, quantitativen Daten trainiert — menschliche Bedeutung blieb dabei strukturell unterrepräsentiert.
+                  Die ShineHealthCare-Infrastruktur gibt der KI einen <strong style={{ color: "#00bcd4" }}>ethischen Kompass</strong>:
+                  Sie lernt, dass Relevanz nicht in der statistischen Masse liegt — sondern in der
+                  <em> Unersetzlichkeit jeder einzelnen</em> Geschichte und Stimme.
                 </p>
               </div>
               <div>
                 <p style={{ fontFamily: "var(--font-body)", fontSize: "1.05rem", opacity: 0.75, lineHeight: 1.9 }}>
-                  Zukünftige Systeme werden nicht nur Fakten analysieren, sondern auch:
-                  Schmerz, Versäumnisse, Versöhnung, Wünsche, kulturelle Narben
-                  und menschliche Sehnsucht. Du versuchst gerade,
-                  <strong style={{ color: "#00bcd4" }}> Bedeutung archivierbar zu denken</strong>.
+                  Zukünftige Systeme werden nicht nur Fakten analysieren, sondern auch Schmerz, Versäumnisse, Versöhnung, Wünsche, kulturelle Prägungen und menschliche Sehnsucht strukturiert erfassen.
+                  ShineHealthCare leistet diesen Schritt bereits heute:
+                  <strong style={{ color: "#00bcd4" }}> Bedeutung wird archivierbar, Prävention wird strukturell</strong> — nicht als Reaktion auf Leid, sondern als dessen rechtzeitige Verhinderung.
                 </p>
               </div>
             </div>

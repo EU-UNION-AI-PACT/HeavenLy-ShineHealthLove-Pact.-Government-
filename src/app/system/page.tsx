@@ -78,7 +78,7 @@ export default function SystemPage() {
           Die Kollektive Koralität
         </h1>
         <p className="font-quote opacity-70 max-w-2xl mx-auto" style={{ fontSize: "clamp(0.95rem, 2vw, 1.15rem)" }}>
-          Ein globales Korrektiv — wo jede Stimme zählt, jede Geschichte gespeichert wird und die Fehler der Vergangenheit technologisch unmöglich gemacht werden.
+          Ein globales Korrektiv der Menschheitsgeschichte — wo jede Stimme gleichwertig zählt, jede Geschichte dauerhaft bewahrt wird und die strukturellen Versäumnisse der Vergangenheit technologisch und rechtlich ausgeschlossen werden.
         </p>
         <div className="passage-line mt-10 max-w-3xl mx-auto" />
       </section>
@@ -154,7 +154,7 @@ export default function SystemPage() {
             ))}
           </div>
           <p className="text-center font-quote opacity-40 mt-6" style={{ fontSize: "0.9rem" }}>
-            Die Atembewegung des Jahres: Ursprung → Spiegelung → Krönung
+            Die drei kalendarischen Anker des Heiligen Jahres 2026: Ursprung — Spiegelung — Krönung. Ein vollständiger Zyklus der Heilung.
           </p>
         </div>
       </section>
@@ -163,7 +163,7 @@ export default function SystemPage() {
       <section className="px-6 mb-16">
         <div className="max-w-5xl mx-auto">
           <p className="font-ceremonial text-center opacity-40 mb-8" style={{ fontSize: "0.6rem", letterSpacing: "4px" }}>
-            ROLLEN-SYSTEM — 5 EBENEN DER BEHEIMALTUNG
+            ROLLEN-SYSTEM — 5 EBENEN DER BEHEIMATUNG UND VERANTWORTUNG
           </p>
           <div className="space-y-2">
             {ROLES.map((r) => (
@@ -197,10 +197,10 @@ export default function SystemPage() {
               🛡️ DAS GOLDENE GESETZ
             </p>
             <p className="font-quote mt-2 opacity-70" style={{ fontSize: "1rem" }}>
-              „Kein Direktkontakt mit Kindern. Alle Junior-Kommunikation fließt ausschließlich durch die Eltern-Passage."
+              „Kein externer Direktkontakt mit Minderjährigen ist strukturell möglich. Jede Systemkommunikation, die ein Kind betrifft, wird ausschließlich über den erziehungsberechtigten Elternteil geleitet — technisch erzwungen, nicht lediglich als Richtlinie formuliert."
             </p>
             <p className="font-ceremonial mt-2 opacity-30" style={{ fontSize: "0.55rem", letterSpacing: "2px" }}>
-              COPPA / DSGVO / EU AI ACT KONFORM — TECHNISCH ERZWUNGEN, NICHT NUR POLICY
+              UN-KINDERRECHTSKONVENTION · COPPA · DSGVO · EU AI ACT — TECHNISCH ERZWUNGEN, NICHT NUR POLICY
             </p>
           </div>
         </div>
