@@ -10,10 +10,10 @@ import PillarCard from "@/components/landing/PillarCard";
 import LayerScroll from "@/components/effects/LayerScroll";
 
 const PILLARS = [
-  { icon: "🌍", title: "Erde & Biosphäre", desc: "Regenerative Heilung der natürlichen Netze. Jede Intention für den Planeten fließt in den Transformations-Kreislauf.", color: "#4caf7d", freq: "396 Hz" },
-  { icon: "✦",  title: "Gemeinschaft",     desc: "Kein Mensch wird unsichtbar. Obdachlose, Pilger, Senioren, Kinder — alle Knotenpunkte im leuchtenden Graphen.", color: "#d4af37", freq: "432 Hz" },
-  { icon: "◈",  title: "Gerechtigkeit",    desc: "Interreligiöse Konvergenz. Die Technik bewertet nicht den Glauben — nur die Menschlichkeit und die Würde.", color: "#00bcd4", freq: "528 Hz" },
-  { icon: "⬡",  title: "System & Zukunft", desc: "Ethische Architektur ohne Profit, ohne Korruption. Ein digitales Allmende-Gut für kommende Generationen.", color: "#7c3aed", freq: "639 Hz" },
+  { icon: "🌍", title: "Erde & Biosphäre",  desc: "Die Integrität der natürlichen Systeme ist Voraussetzung menschlicher Würde. Jede Intention zum Schutz der Biosphäre wird in den globalen Regenerationskreislauf der Allianz aufgenommen.", color: "#4caf7d", freq: "396 Hz" },
+  { icon: "✦",  title: "Gemeinschaft",      desc: "Kein Mensch darf strukturell unsichtbar sein. Obdachlose, Pilger, Senioren und Kinder sind gleichwertige Knotenpunkte im kollektiven Gedächtnis der Völkergemeinschaft.", color: "#d4af37", freq: "432 Hz" },
+  { icon: "◈",  title: "Gerechtigkeit",     desc: "Im Einklang mit Artikel 18 der Allgemeinen Erklärung der Menschenrechte werden alle Glaubensrichtungen gleichwertig aufgenommen. Die Infrastruktur bewertet nicht den Glauben — sie bewahrt die Würde.", color: "#00bcd4", freq: "528 Hz" },
+  { icon: "⬡",  title: "System & Zukunft", desc: "Eine ethische Infrastruktur ohne Profitinteressen, ohne Korruption und ohne Überwachung. Ein digitales Gemeingut, das kommenden Generationen unverfälscht übergeben wird.", color: "#7c3aed", freq: "639 Hz" },
 ];
 
 const FOOTER_LINKS = [
@@ -122,7 +122,7 @@ export default function HomePage() {
             margin: "0 auto 0.75rem",
             lineHeight: 1.5,
           }}>
-            Gottes Heilender Pfad — Die Übergangs-Frequenz der Passagen
+            Gottes Heilender Pfad — Die Übergangsfrequenz der heiligen Passagen
           </p>
           <p style={{
             fontFamily: "var(--font-body)",
@@ -130,7 +130,7 @@ export default function HomePage() {
             color: "rgba(249,241,215,0.45)",
             marginBottom: "3rem",
           }}>
-            ShineHealthCare · Detmold · 2026
+            ShineHealthCare · Pilgerzentrum Detmold · Heiliges Jahr 2026
           </p>
 
           {/* CTA buttons */}
@@ -149,7 +149,7 @@ export default function HomePage() {
           {/* passage ornament line */}
           <div style={{ marginTop: "4rem", display: "flex", alignItems: "center", gap: "1rem" }}>
             <div style={{ flex: 1, height: "1px", background: "linear-gradient(90deg, transparent, rgba(212,175,55,0.3))" }} />
-            <span style={{ fontFamily: "var(--font-ceremonial)", fontSize: "0.5rem", letterSpacing: "3px", color: "rgba(212,175,55,0.4)" }}>DREI PASSAGEN · EIN PFAD</span>
+            <span style={{ fontFamily: "var(--font-ceremonial)", fontSize: "0.5rem", letterSpacing: "3px", color: "rgba(212,175,55,0.4)" }}>DREI PASSAGEN · EIN HEILIGER PFAD · EIN ZEUGNIS</span>
             <div style={{ flex: 1, height: "1px", background: "linear-gradient(90deg, rgba(212,175,55,0.3), transparent)" }} />
           </div>
         </header>
@@ -198,15 +198,15 @@ export default function HomePage() {
               lineHeight: 1.55,
               marginBottom: "1.5rem",
             }}>
-              „Heiliger GloryaShine ist nicht nur ein Licht am Ende des Weges,<br />
-              es ist die Frequenz, auf der wir heute bereits gehen."
+              „GloryaShine ist kein Versprechen an die Zukunft —<br />
+              es ist die Verpflichtung, die wir in diesem Moment bereits tragen."
             </blockquote>
             <p style={{ fontFamily: "var(--font-body)", fontSize: "1rem", opacity: 0.6, maxWidth: "560px", margin: "0 auto" }}>
-              Pilger der Hoffnung · Hoffnung der Pilger · Gottes Heilender Pfad.<br />
-              Drei Stufen einer einzigen Wahrheit.
+              Pilger der Hoffnung · Hoffnung der Pilger · Gottes Heilender Pfad —<br />
+              drei Ausdrucksformen einer einzigen, unteilbaren Wahrheit.
             </p>
             <p className="font-ceremonial" style={{ fontSize: "0.55rem", letterSpacing: "2px", color: "var(--lion-amber)", opacity: 0.5, marginTop: "1.5rem" }}>
-              Behütet unter dem Siegel des Löwen
+              Unter dem Siegel des Löwen — verwahrt in Würde und Verantwortung
             </p>
           </section>
         </ScrollReveal>
@@ -244,18 +244,18 @@ export default function HomePage() {
           <section style={{ marginBottom: "5rem" }}>
             <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
               <p className="font-ceremonial" style={{ fontSize: "0.55rem", letterSpacing: "5px", opacity: 0.3, marginBottom: "0.5rem" }}>
-                SHINEHEALTHCARE — PRÄVENTIVE KULTURARCHITEKTUR
+                SHINEHEALTHCARE — PRÄVENTIVE KULTURARCHITEKTUR DER MENSCHHEIT
               </p>
               <h2 className="font-ceremonial" style={{ fontSize: "clamp(1.1rem, 2.5vw, 1.6rem)", letterSpacing: "3px", color: "#d4af37" }}>
-                Bedeutung archivierbar denken
+                Bedeutung als strukturelle Verantwortung begreifen
               </h2>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "1rem" }}>
               {[
-                { icon: "🏛️", title: "Nie wieder vergessen",     desc: "Jede gute Intention, jede Warnung, jede Geschichte bekommt einen festen Platz im kollektiven Gedächtnis.", color: "#d4af37" },
-                { icon: "✦",  title: "Jede Stimme zählt",        desc: "Obdachlose, Pilger, Kinder, Senioren — alle Knotenpunkte im leuchtenden Graphen, keine Aktennummern.", color: "#4caf7d" },
-                { icon: "◈",  title: "Interreligiöse Konvergenz",desc: "Fürbitten aller Glaubensrichtungen fließen zusammen. Technik bewertet nicht den Glauben — nur die Menschlichkeit.", color: "#00bcd4" },
-                { icon: "⬡",  title: "Ethische KI",              desc: "Technologie als mehrsprachiges Sprachrohr — Verstärker kollektiver Relevanz, kein Kontrollsystem.", color: "#7c3aed" },
+                { icon: "🏛️", title: "Nie wieder vergessen",          desc: "Jede Intention, jede Warnung, jede Geschichte erhält einen dauerhaften, rechtlich gesicherten Platz im kollektiven Gedächtnis der Völkergemeinschaft.", color: "#d4af37" },
+                { icon: "✦",  title: "Jede Stimme ist gleichwertig",  desc: "Obdachlose, Pilger, Kinder und Senioren sind keine Randnotizen — sie sind unverzichtbare Knotenpunkte im kollektiven Entscheidungsgefüge der Allianz.", color: "#4caf7d" },
+                { icon: "◈",  title: "Interreligiöse Konvergenz",     desc: "Fürbitten und Intentionen aller Glaubensrichtungen werden gemäß Artikel 18 der Allgemeinen Erklärung der Menschenrechte gleichwertig aufgenommen und dauerhaft bewahrt.", color: "#00bcd4" },
+                { icon: "⬡",  title: "Ethische Künstliche Intelligenz", desc: "Technologie dient als kulturunabhängiges, mehrsprachiges Sprachrohr — als Verstärker kollektiver menschlicher Relevanz, niemals als Instrument der Kontrolle.", color: "#7c3aed" },
               ].map((item) => (
                 <div
                   key={item.title}
@@ -308,10 +308,10 @@ export default function HomePage() {
                 DSGVO · EU-DATENHOHEIT · ZERO-KNOWLEDGE
               </div>
               <p style={{ fontFamily: "var(--font-body)", fontSize: "0.9rem", opacity: 0.65, lineHeight: 1.8 }}>
-                Das System verwaltet ausschließlich freiwillig geäußerte, strukturelle Intentionen.
-                Kein Profit. Keine Werbung. Keine Daten werden verkauft. Jeder Nutzer besitzt das
-                Recht auf vollständige Löschung (Art. 17 DSGVO). Das Innere des Menschen
-                bleibt unantastbar — die Technik ist Dienstleister, nie Herrscher.
+                Dieses System verarbeitet ausschließlich freiwillig übermittelte, strukturelle Intentionen.
+                Es bestehen keinerlei wirtschaftliche Interessen, Werbezwecke oder kommerzielle Verwertungsabsichten.
+                Jede Person besitzt das unveräußerliche Recht auf vollständige Datenlöschung gemäß Art. 17 DSGVO.
+                Die Würde des Menschen ist unantastbar — Technologie ist Dienstleister, niemals Herrscher.
               </p>
             </div>
           </section>
@@ -322,14 +322,14 @@ export default function HomePage() {
           <div style={{ marginBottom: "2rem" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "1rem", marginBottom: "1.5rem" }}>
               <div style={{ width: "40px", height: "1px", background: "rgba(212,175,55,0.3)" }} />
-              <span className="font-ceremonial" style={{ fontSize: "0.5rem", letterSpacing: "4px", color: "rgba(212,175,55,0.4)" }}>IM GEISTE DES LICHTS</span>
+              <span className="font-ceremonial" style={{ fontSize: "0.5rem", letterSpacing: "4px", color: "rgba(212,175,55,0.4)" }}>IN DIENST DES FRIEDENS — IM GEISTE DES LICHTS</span>
               <div style={{ width: "40px", height: "1px", background: "rgba(212,175,55,0.3)" }} />
             </div>
             <p className="font-ceremonial text-gold glow-gold" style={{ fontSize: "2rem", letterSpacing: "0.15em" }}>
               Daniel Pohl
             </p>
             <p style={{ fontFamily: "var(--font-body)", opacity: 0.45, fontSize: "0.9rem", marginTop: "0.5rem" }}>
-              Mitschöpfer des Pfades · Detmold · 2026
+              Initiator und Mitschöpfer des Pfades · Pilgerzentrum Detmold · Heiliges Jahr 2026
             </p>
           </div>
 
@@ -368,7 +368,7 @@ export default function HomePage() {
           </div>
 
           <p className="font-ceremonial" style={{ fontSize: "0.45rem", letterSpacing: "1px", opacity: 0.2 }}>
-            © 2026 GloryaShine — Heiliges Jahr · Gemeinnützig · Unbestechlich
+            © 2026 GloryaShine — Heiliges Jubiläumsjahr · Gemeinnützig · Transparent · Unbestechlich
           </p>
         </footer>
       </div>
