@@ -18,7 +18,7 @@ const LAYERS: Layer[] = [
     id: "shinehealthcare-origin",
     eyebrow: "◈  SHINEHEALTHCARE — GLOBALE INFRASTRUKTUR",
     title: "Nie wieder\nvergessen",
-    subtitle: "Ein System, das verhindert, dass eine Stimme, eine Geschichte, eine Warnung jemals im Mist der Geschichte verloren geht.",
+    subtitle: "Die Völkergemeinschaft hat die Pflicht, strukturelle Versäumnisse nicht zu wiederholen. Dieses System macht es technologisch und rechtlich verbindlich, jede menschliche Stimme zu archivieren — unabhängig von Herkunft, Glaube oder gesellschaftlicher Stellung.",
     cta: { label: "Das System entdecken", href: "/shinehealthcare" },
     accentColor: "#4caf7d",
     bg: "radial-gradient(ellipse at 50% 0%, rgba(76,175,125,0.13) 0%, transparent 60%), radial-gradient(ellipse at 20% 80%, rgba(76,175,125,0.05) 0%, transparent 55%), #0a0c10",
@@ -27,7 +27,7 @@ const LAYERS: Layer[] = [
     id: "koralitaet",
     eyebrow: "✦  KOLLEKTIVE KORALITÄT",
     title: "Jede Stimme\nformt den\nGesamtklang",
-    subtitle: "Obdachlose, Pilger, Kinder, Senioren — alle sind Knotenpunkte im leuchtenden Graphen. Keine Aktennummern. Keine Unsichtbaren.",
+    subtitle: "Souveränität beginnt beim Individuum. Ob Pilger, Obdachloser, Kind oder Senior — jeder Mensch trägt als gleichwertiger Knotenpunkt zur kollektiven Entscheidungsbasis der Allianz bei. Unsichtbarkeit ist keine Option, die dieses System duldet.",
     cta: { label: "Wunsch einreichen", href: "/portal/wishes" },
     accentColor: "#d4af37",
     bg: "radial-gradient(ellipse at 30% 20%, rgba(212,175,55,0.12) 0%, transparent 60%), radial-gradient(ellipse at 70% 80%, rgba(212,175,55,0.05) 0%, transparent 55%), #0a0c10",
@@ -36,7 +36,7 @@ const LAYERS: Layer[] = [
     id: "furbitte",
     eyebrow: "⬡  FÜRBITTE ALLER RELIGIONEN",
     title: "Das Sprachrohr\nder Welt",
-    subtitle: "Gebete und Intentionen aller Glaubensrichtungen fließen zusammen. Die Technik bewertet nicht den Glauben — nur die Menschlichkeit.",
+    subtitle: "In Übereinstimmung mit Artikel 18 der Allgemeinen Erklärung der Menschenrechte werden Gebete, Intentionen und Fürbitten aller Glaubensrichtungen gleichwertig aufgenommen. Die Infrastruktur bewertet nicht den Glauben — sie bewahrt die Würde.",
     cta: { label: "Fürbitte einreichen", href: "/portal/furbitte" },
     accentColor: "#00bcd4",
     bg: "radial-gradient(ellipse at 70% 10%, rgba(0,188,212,0.12) 0%, transparent 60%), radial-gradient(ellipse at 30% 90%, rgba(0,188,212,0.05) 0%, transparent 55%), #0a0c10",
@@ -45,7 +45,7 @@ const LAYERS: Layer[] = [
     id: "guardian",
     eyebrow: "♦  ELTERN-PASSAGE — KINDERSCHUTZ",
     title: "Das Kind\nim sicheren\nVakuum",
-    subtitle: "Kein direkter Kontakt von außen. Kommunikation nur über die Eltern-Passage. Das Kind ist energetisch präsent — und absolut geschützt.",
+    subtitle: "Im Einklang mit der UN-Kinderrechtskonvention gilt das Zwei-Schlüssel-Prinzip: Jede Systemkommunikation, die ein Kind betrifft, wird ausschließlich über den erziehungsberechtigten Elternteil geleitet. Kein externer Direktkontakt ist strukturell möglich.",
     cta: { label: "Eltern-Portal öffnen", href: "/portal/guardian" },
     accentColor: "#e67e22",
     bg: "radial-gradient(ellipse at 50% 50%, rgba(230,126,34,0.1) 0%, transparent 65%), radial-gradient(ellipse at 80% 20%, rgba(212,175,55,0.05) 0%, transparent 50%), #0a0c10",
@@ -54,7 +54,7 @@ const LAYERS: Layer[] = [
     id: "allianz",
     eyebrow: "⊕  EU · UN · USA — WELT-ALLIANZ",
     title: "Technologie\nals Dienstleister\nnicht als Herrscher",
-    subtitle: "Ethische Architektur ohne Profit, ohne Korruption. Daten-Souveränität nach DSGVO. Das Innere des Menschen bleibt unantastbar.",
+    subtitle: "Die Allianz aus Europäischer Union, Vereinten Nationen und den Vereinigten Staaten trägt gemeinsam die ethische Verantwortung für diese Infrastruktur. Datensouveränität nach DSGVO, Transparenzpflicht und das Recht auf digitale Würde sind nicht verhandelbar.",
     cta: { label: "Charta der Koralität", href: "/portal/charta" },
     accentColor: "#7c3aed",
     bg: "radial-gradient(ellipse at 20% 30%, rgba(124,58,237,0.11) 0%, transparent 60%), radial-gradient(ellipse at 80% 70%, rgba(76,175,125,0.05) 0%, transparent 50%), #0a0c10",
@@ -69,7 +69,7 @@ export default function LayerScroll({ onExit }: { onExit: () => void }) {
     LAYERS.map((_, i) => (i === 0 ? "active" : "hidden"))
   );
   const transitioning = useRef(false);
-  const DURATION = 900;
+  const DURATION = 1400;
 
   const goTo = useCallback(
     (nextIdx: number) => {
@@ -124,8 +124,8 @@ export default function LayerScroll({ onExit }: { onExit: () => void }) {
     let lastWheel = 0;
     const onWheel = (e: WheelEvent) => {
       const now = Date.now();
-      if (now - lastWheel < DURATION) return;
-      if (Math.abs(e.deltaY) < 15) return;
+      if (now - lastWheel < DURATION + 300) return;
+      if (Math.abs(e.deltaY) < 30) return;
       lastWheel = now;
       handleNav(e.deltaY > 0 ? "down" : "up");
     };
@@ -149,7 +149,7 @@ export default function LayerScroll({ onExit }: { onExit: () => void }) {
     const onStart = (e: TouchEvent) => { startY = e.touches[0].clientY; };
     const onEnd = (e: TouchEvent) => {
       const diff = startY - e.changedTouches[0].clientY;
-      if (Math.abs(diff) > 55) handleNav(diff > 0 ? "down" : "up");
+      if (Math.abs(diff) > 80) handleNav(diff > 0 ? "down" : "up");
     };
     window.addEventListener("touchstart", onStart, { passive: true });
     window.addEventListener("touchend", onEnd, { passive: true });
@@ -180,8 +180,8 @@ export default function LayerScroll({ onExit }: { onExit: () => void }) {
           state === "active"
             ? "translateZ(0) scale(1) translateY(0)"
             : state === "exit"
-            ? "translateY(-52%) rotateX(12deg) scale(0.88)"
-            : "translateZ(-180px) scale(0.92) translateY(40px)";
+            ? "translateY(-30%) rotateX(6deg) scale(0.94) opacity(0)"
+            : "translateZ(-120px) scale(0.96) translateY(25px)";
 
         return (
           <div
@@ -199,7 +199,7 @@ export default function LayerScroll({ onExit }: { onExit: () => void }) {
               opacity: state === "active" ? 1 : 0,
               visibility: state === "active" || state === "exit" ? "visible" : "hidden",
               transform,
-              transition: `transform ${DURATION}ms cubic-bezier(0.25,1,0.5,1), opacity ${DURATION}ms cubic-bezier(0.25,1,0.5,1)`,
+              transition: `transform ${DURATION}ms cubic-bezier(0.16,1,0.3,1), opacity ${DURATION * 0.85}ms cubic-bezier(0.16,1,0.3,1)`,
               willChange: "transform, opacity",
               zIndex: state === "active" ? 10 : state === "exit" ? 5 : 1,
             }}
